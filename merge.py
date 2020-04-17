@@ -1,43 +1,51 @@
 import re
+import os
 
-def compileOutput(assetPath, codePath, outputPath):
-	with open(assetPath, "r+") as f:
+def compile_output(asset_path, code_path, output_path):
+	if not os.path.exists(os.path.dirname(output_path)):
+		try:
+			os.makedirs(os.path.dirname(output_path))
+		except OSError as exc: # Guard against race condition
+			if exc.errno != errno.EEXIST:
+				raise
+
+	with open(asset_path, "r+") as f:
 		lines = f.readlines()
 		
-		startCopy = False
+		start_copy = False
 
-		assetArray = []
+		asset_array = []
 
 		for line in lines:
 			result = re.findall("__[A-Za-z]+__", line)
 			if len(result) > 0 and "lua" not in result[0]:
-				startCopy = True
-			if startCopy:
-				assetArray.append(line)
+				start_copy = True
+			if start_copy:
+				asset_array.append(line)
 
-	with open(codePath, "r+") as f:
+	with open(code_path, "r+") as f:
 		lines = f.readlines()
 
-		codeArray = []
+		code_array = []
 
 		for line in lines:
 			result = re.findall("__[A-Za-z]+__", line)
 			if len(result) > 0 and "lua" not in result[0]:
 				break
-			codeArray.append(line)
+			code_array.append(line)
 
-	with open(outputPath, "w+") as f:
-		for line in codeArray:
+	with open(output_path, "w+") as f:
+		for line in code_array:
 			f.write(line)
-		for line in assetArray:
+		for line in asset_array:
 			f.write(line)
 
 def main():
-	assetPath = "./assets.p8"
-	codePath = "./code.p8"
-	outputPath = "./bin/output.p8"
+	asset_path = "./assets.p8"
+	code_path = "./code.p8"
+	output_path = "./bin/output.p8"
 
-	compileOutput(assetPath, codePath, outputPath)
+	compile_output(asset_path, code_path, output_path)
 
 if __name__ == '__main__':
 	main()

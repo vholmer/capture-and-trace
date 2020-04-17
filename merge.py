@@ -45,7 +45,7 @@ def main():
 	code_path = "./code.p8"
 	output_path = "./bin/output.p8"
 
-	compile_output(asset_path, code_path, output_path)
+	compile_output (asset_path, code_path, output_path)
 
 if __name__ == '__main__':
 	main()

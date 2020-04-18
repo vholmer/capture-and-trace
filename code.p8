@@ -28,8 +28,8 @@ function _draw()
 	cls(1)
 	foreach(agents, draw_agent)
 	draw_mouse()
-	print("CPU: " .. stat(1), 0, 0, 7)
-	print("MEM: " .. stat(0), 0, 6, 7)
+	--print("CPU: " .. stat(1), 0, 0, 7)
+	--print("MEM: " .. stat(0), 0, 6, 7)
 end
 
 function draw_mouse()

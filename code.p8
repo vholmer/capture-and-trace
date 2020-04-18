@@ -14,7 +14,7 @@ change_dir_chance = 0.1 -- percent
 hit_distance = 3
 
 function _init()
-	n = 12
+	local n = 200
 	make_world()
 	make_agents(n)
 end
@@ -33,8 +33,8 @@ function _draw()
 end
 
 function draw_mouse()
-	mouse_x = stat(32)
-	mouse_y = stat(33)
+	local mouse_x = stat(32)
+	local mouse_y = stat(33)
 
 	pset(mouse_x - 1, mouse_y - 1, 7)
 	pset(mouse_x - 1, mouse_y + 1, 7)
@@ -51,8 +51,8 @@ function draw_mouse()
 end
 
 function user_input()
-	mouse_x = stat(32)
-	mouse_y = stat(33)
+	local mouse_x = stat(32)
+	local mouse_y = stat(33)
 	--if stat(34) == 1 then
 	--	for i = 0, hit_distance do
 	--		for j = 0, hit_distance do
@@ -88,10 +88,12 @@ end
 
 function make_agents(n)
 	for i = 1, n do
-		agent = {}
-		attempt = 0
-		num_retries = 10
-		empty_coord = false
+		local agent = {}
+		local attempt = 0
+		local num_retries = 10
+		local empty_coord = false
+		local rand_x = -1
+		local rand_y = -1
 		while not empty_coord and attempt < num_retries do
 			rand_x = flr(rnd(max_x - min_x)) + min_x
 			rand_y = flr(rnd(max_y - min_y)) + min_y
@@ -103,7 +105,6 @@ function make_agents(n)
 			agent.y = rand_y
 			agent.home_x = rand_x
 			agent.home_y = rand_y
-			agent.time_to_move = 0
 			matrix[agent.x][agent.y] = 1
 			add(agents, agent)
 		end
@@ -149,6 +150,8 @@ end
 function get_delta(x, y)
 	dirs = {-1, 0, 1}
 
+	local dx, dy = 0, 0
+
 	chosen_dir = dirs[flr(rnd(3)) + 1]
 	if x - dist <= min_x then dx = 1
 	elseif x + dist >= max_x then dx = -1
@@ -165,46 +168,38 @@ function get_delta(x, y)
 end
 
 function act(a)
-	foreach(agents, agent_move)
-	--for agent in all(agents) do
-	--	agent_move(agent)
-	--end
+	agent_move(a)
 end
 
 function agent_move(agent)
-	if agent.time_to_move == 0 then
-		if 		agent.prev_dx == nil
-			or 	agent.prev_dy == nil
-			or 	change_dir_chance > rnd(1)
-		then
-			dx, dy = get_delta(agent.x, agent.y)
-		else
-			dx = agent.prev_dx
-			dy = agent.prev_dy
-		end
-
-		empty_coord = false
-		attempt = 0
-		num_retries = 10
-		while not empty_coord and attempt < num_retries do
-			empty_coord = check_empty(agent.x + dx, agent.y + dy, agent)
-			if empty_coord then
-				matrix[agent.x][agent.y] = 0
-				agent.x += dx
-				agent.y += dy
-				agent.prev_dx = dx
-				agent.prev_dy = dy
-
-				matrix[agent.x][agent.y] = 1
-				break
-			else
-				attempt += 1
-				dx, dy = get_delta(agent.x, agent.y)
-			end
-		end
-		agent.time_to_move = flr(rnd(#agents)) + #agents \ 2
+	if 		agent.prev_dx == nil
+		or 	agent.prev_dy == nil
+		or 	change_dir_chance > rnd(1)
+	then
+		dx, dy = get_delta(agent.x, agent.y)
 	else
-		agent.time_to_move -= 1
+		dx = agent.prev_dx
+		dy = agent.prev_dy
+	end
+
+	local empty_coord = false
+	local attempt = 0
+	local num_retries = 10
+	while not empty_coord and attempt < num_retries do
+		empty_coord = check_empty(agent.x + dx, agent.y + dy, agent)
+		if empty_coord then
+			matrix[agent.x][agent.y] = 0
+			agent.x += dx
+			agent.y += dy
+			agent.prev_dx = dx
+			agent.prev_dy = dy
+
+			matrix[agent.x][agent.y] = 1
+			break
+		else
+			attempt += 1
+			dx, dy = get_delta(agent.x, agent.y)
+		end
 	end
 end
 __gfx__

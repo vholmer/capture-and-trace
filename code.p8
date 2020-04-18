@@ -335,14 +335,14 @@ local priorityqueue = {}
 priorityqueue.__index = priorityqueue
 
 setmetatable(
-		priorityqueue,
-		{
-				__call = function (self)
-						setmetatable({}, self)
-						self:initialize()
-						return self
-				end
-		}
+	priorityqueue,
+	{
+		__call = function (self)
+			setmetatable({}, self)
+			self:initialize()
+			return self
+		end
+	}
 )
 
 
@@ -352,82 +352,82 @@ function priorityqueue:initialize()
 				priorityqueue = require("priority_queue")
 				pq = priorityqueue()
 		]]--
-		self.heap = {}
-		self.current_size = 0
+	self.heap = {}
+	self.current_size = 0
 end
 
 function priorityqueue:empty()
-		return self.current_size == 0
+	return self.current_size == 0
 end
 
 function priorityqueue:size()
-		return self.current_size
+	return self.current_size
 end
 
 function priorityqueue:swim()
 		-- swim up on the tree and fix the order heap property.
-		local heap = self.heap
-		local floor = floor
-		local i = self.current_size
+	local heap = self.heap
+	local floor = floor
+	local i = self.current_size
 
-		while floor(i / 2) > 0 do
-				local half = floor(i / 2)
-				if heap[i][2] < heap[half][2] then
-						heap[i], heap[half] = heap[half], heap[i]
-				end
-				i = half
+	while floor(i / 2) > 0 do
+		local half = floor(i / 2)
+		if heap[i][2] < heap[half][2] then
+			heap[i], heap[half] = heap[half], heap[i]
 		end
+		i = half
+	end
 end
 
 function priorityqueue:put(v, p)
-		--[[ put an item on the queue.
-		args:
-				v: the item to be stored
-				p(number): the priority of the item
-		]]--
-		--
+	--[[ put an item on the queue.
+	args:
+			v: the item to be stored
+			p(number): the priority of the item
+	]]--
+	--
 
-		self.heap[self.current_size + 1] = {v, p}
-		self.current_size = self.current_size + 1
-		self:swim()
+	self.heap[self.current_size + 1] = {v, p}
+	self.current_size = self.current_size + 1
+	self:swim()
 end
 
 function priorityqueue:sink()
 		-- sink down on the tree and fix the order heap property.
-		local size = self.current_size
-		local heap = self.heap
-		local i = 1
+	local size = self.current_size
+	local heap = self.heap
+	local i = 1
 
-		while (i * 2) <= size do
-				local mc = self:min_child(i)
-				if heap[i][2] > heap[mc][2] then
-						heap[i], heap[mc] = heap[mc], heap[i]
-				end
-				i = mc
+	while (i * 2) <= size do
+		local mc = self:min_child(i)
+		if heap[i][2] > heap[mc][2] then
+			heap[i], heap[mc] = heap[mc], heap[i]
 		end
+		i = mc
+	end
 end
 
 function priorityqueue:min_child(i)
-		if (i * 2) + 1 > self.current_size then
-				return i * 2
+	if (i * 2) + 1 > self.current_size then
+		return i * 2
+	else
+		if self.heap[i * 2][2] < self.heap[i * 2 + 1][2] then
+			return i * 2
 		else
-				if self.heap[i * 2][2] < self.heap[i * 2 + 1][2] then
-						return i * 2
-				else
-						return i * 2 + 1
-				end
+			return i * 2 + 1
 		end
+	end
 end
 
 function priorityqueue:pop()
-		-- remove and return the top priority item
-		local heap = self.heap
-		local retval = heap[1][1]
-		heap[1] = heap[self.current_size]
-		heap[self.current_size] = nil
-		self.current_size = self.current_size - 1
-		self:sink()
-		return retval
+	-- remove and return the top priority item
+	local heap = self.heap
+	local retval = heap[1][1]
+	heap[1] = heap[self.current_size]
+	heap[self.current_size] = nil
+	self.current_size = self.current_size - 1
+	self:sink()
+	return retval
 end
 
 width=128
@@ -472,89 +472,27 @@ function get_default(tbl, i, def)
 end
 
 function func_h(a,b)
-	--return abs(a.x-b.x)+abs(a.y-b.y)
 	return (a.x-b.x)^2 + (a.y-b.y)^2
+end
+
+function reverse(t)
+	local n = #t
+	local i = 1
+	while i < n do
+		t[i],t[n] = t[n],t[i]
+		i = i + 1
+		n = n - 1
+	end
 end
 
 function reconstruct_path(curr, came_from)
 	total_path = {}
-	counter = 0
+	counter = 1
 	while came_from[get_id(curr)] ~= nil do
 		total_path[counter] = curr
 		curr = came_from[get_id(curr)]
 		counter += 1
 	end
-	return total_path
-end
-
-
-function get_id(pos)
-	return pos.y*size+pos.x
-end
-
-function create_pos(x,y)
-	pos = {}
-	pos.x = x
-	pos.y = y
-	return pos
-end
-
-function get_pos(id)
-	local pos ={}
-	pos.y = flr(id / size)
-	pos.x = id % size
-	return pos
-end
-
-function reverse(tbl)
-	for i=1, flr(#tbl / 2) do
-	tbl[i], tbl[#tbl - i + 1] = tbl[#tbl - i + 1], tbl[i]
-	end
-end
-
-	-- Get the surrounding
-function get_neighbours(pos)
-	neighs = {}
-	counter = 0
-	for x=-1,1 do
-	for y=-1,1 do
-		if not (x == 0 and y == 0) then
-		newx,newy=pos.x+x,pos.y+y
-		if newx >= min_x and newx < max_x and newy >= min_y and newy < max_y then
-			neigh = create_pos(newx,newy)
-			neighs[counter] = neigh
-			counter += 1
-		end
-		end
-	end
-	end
-	return neighs
-end
-
-	-- Get the value from a table, or a default value
-function get_default(tbl, i, def)
-	val = tbl[i]
-	if val == nil then
-	return def
-	else
-	return val
-	end
-end
-
-function func_h(a,b)
-	--return abs(a.x-b.x)+abs(a.y-b.y)
-	return (a.x-b.x)^2 + (a.y-b.y)^2
-end
-
-function reconstruct_path(curr, came_from)
-	total_path = {}
-	counter = 0
-	while came_from[get_id(curr)] ~= nil do
-	total_path[counter] = curr
-	curr = came_from[get_id(curr)]
-	counter += 1
-	end
-
 	reverse(total_path)
 	return total_path
 end
@@ -565,7 +503,7 @@ function create_pos(x,y)
 	pos.x=x
 	pos.y=y
 	return pos
-end 
+end
 
 function pos_eq(a,b)
 	return a.x == b.x and a.y == b.y
@@ -583,37 +521,46 @@ function a_star(start, goal)
 	g_scores[get_id(start)] = 0
 
 	while not open_set_q:empty() or curr == nil do
-	  if curr == nil then
-        curr = start
-    else
-        curr = get_pos(open_set_q:pop())
-        open_set_tb[get_id(curr)] = nil
-    end
+		if curr == nil then
+			curr = start
+		else
+			curr = get_pos(open_set_q:pop())
+			open_set_tb[get_id(curr)] = nil
+		end
 
-    curr_id = get_id(curr)
+		curr_id = get_id(curr)
 
-    if pos_eq(curr, goal) then
-        return reconstruct_path(goal, came_from)
-    end
-    ns = get_neighbours(curr)
-    for i, n in pairs(ns) do
-      n_id = get_id(n)
+		if pos_eq(curr, goal) then
 
-      tent_score = get_default(g_scores, curr_id, (1/0)) + func_h(curr, n)
-      if tent_score < get_default(g_scores, n_id, (1/0)) then
-        came_from[n_id] = curr
-        g_scores[n_id] = tent_score
-        f_score = tent_score + func_h(n, goal)
-        f_scores[n_id] = f_score
+			return reconstruct_path(goal, came_from)
+		end
+		ns = get_neighbours(curr)
+		for i, n in pairs(ns) do
+			n_id = get_id(n)
+			tent_score = get_default(g_scores, curr_id, (1/0)) + func_h(curr, n)
+			if tent_score < get_default(g_scores, n_id, (1/0)) then
+				came_from[n_id] = curr
+				g_scores[n_id] = tent_score
+				f_score = tent_score + func_h(n, goal)
+				f_scores[n_id] = f_score
 
-        if open_set_tb[n_id] == nil then
-            open_set_q:put(n_id, f_score)
-            open_set_tb[n_id] = n
-        end
-      end
-    end
-  end
+				if open_set_tb[n_id] == nil then
+					open_set_q:put(n_id, f_score)
+					open_set_tb[n_id] = n
+				end
+			end
+		end
+	end
  end
+
+-- Example usage of a_star
+-- start, goal= create_pos(68,124), create_pos(0, 0)
+-- path = a_star(start, goal) -- path is is 1-index
+-- path[1].x is the next x-value in the agents path etc.
+-- path[1].y is the next y-value in the agents path etc.
+-- for i,p in pairs(path) do
+-- 	print(p.x..':'..p.y)
+-- end
 
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000

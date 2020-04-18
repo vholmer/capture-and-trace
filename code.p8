@@ -17,6 +17,9 @@ home_size = 4
 home_radius = home_size \ 2
 time_cycle = 100
 in_cycle = true
+max_ap = 4
+curr_ap = 4
+et_mouse_over = false
 
 function _init()
 	local n = 100
@@ -35,7 +38,9 @@ function _update()
 	else
 		user_input()
 	end
-	time_cycle -= 1
+	if time_cycle > 0 then
+		time_cycle -= 1
+	end
 end
 
 function _draw()
@@ -49,14 +54,43 @@ function _draw()
 	draw_hall()
 	draw_buttons()
 	draw_cycle()
+	draw_ap()
 	draw_mouse()
 	--print("CPU: " .. stat(1), 0, 0, 7)
 	--print("MEM: " .. stat(0), 0, 6, 7)
 end
 
+function draw_ap()
+	ap_top_left_x = 46
+	ap_top_left_y = 111
+	ap_bot_right_x = ap_top_left_x + 28
+	ap_bot_right_y = ap_top_left_y + 6
+
+	if in_cycle then
+		color = 8
+	else
+		color = 6
+	end
+
+	rectfill(
+		ap_top_left_x,
+		ap_top_left_y,
+		ap_bot_right_x,
+		ap_bot_right_y,
+		color
+	)
+
+	print(
+		"ap: " .. curr_ap .. "/" .. max_ap,
+		ap_top_left_x + 1,
+		ap_top_left_y + 1,
+		0
+	)
+end
+
 function draw_cycle()
-	cycle_top_right_x = 125
-	cycle_top_right_y = 103
+	cycle_top_right_x = 124
+	cycle_top_right_y = 105
 	cycle_bot_left_x = cycle_top_right_x - 32
 	cycle_bot_left_y = cycle_top_right_y + 6
 
@@ -83,12 +117,14 @@ function draw_cycle()
 end
 
 function draw_buttons()
-	end_turn_bot_right_y = 125 -- 109
-	end_turn_bot_right_x = 125 -- 34
+	end_turn_bot_right_y = 123 -- 109
+	end_turn_bot_right_x = 124 -- 34
 	end_turn_top_left_x = end_turn_bot_right_x - 32
 	end_turn_top_left_y = end_turn_bot_right_y - 6
 
-	if in_cycle then
+	if et_mouse_over then
+		color = 3
+	elseif in_cycle then
 		color = 8
 	else
 		color = 6
@@ -100,6 +136,14 @@ function draw_buttons()
 		end_turn_bot_right_x,
 		end_turn_bot_right_y,
 		color
+	)
+
+	rect(
+		end_turn_top_left_x - 1,
+		end_turn_top_left_y - 1,
+		end_turn_bot_right_x + 1,
+		end_turn_bot_right_y + 1,
+		5
 	)
 
 	print(
@@ -184,6 +228,16 @@ end
 function user_input()
 	local mouse_x = stat(32)
 	local mouse_y = stat(33)
+
+	if 		mouse_x >= end_turn_top_left_x
+		and mouse_x <= end_turn_bot_right_x
+		and mouse_y >= end_turn_top_left_y
+		and mouse_y <= end_turn_bot_right_y
+	then
+		et_mouse_over = true
+	else
+		et_mouse_over = false
+	end
 	
 	if stat(34) == 1 then
 		if 		mouse_x >= end_turn_top_left_x
@@ -191,6 +245,7 @@ function user_input()
 			and mouse_y >= end_turn_top_left_y
 			and mouse_y <= end_turn_bot_right_y
 		then
+			et_mouse_over = false
 			in_cycle = true
 			time_cycle = 100
 		end

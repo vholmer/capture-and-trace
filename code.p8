@@ -52,7 +52,7 @@ function _draw()
 	foreach(agents, draw_home)
 	foreach(agents, draw_agent)
 	draw_hall()
-	draw_buttons()
+	draw_endturn()
 	draw_cycle()
 	draw_ap()
 	draw_mouse()
@@ -116,7 +116,7 @@ function draw_cycle()
 	)
 end
 
-function draw_buttons()
+function draw_endturn()
 	end_turn_bot_right_y = 123 -- 109
 	end_turn_bot_right_x = 124 -- 34
 	end_turn_top_left_x = end_turn_bot_right_x - 32

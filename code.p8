@@ -278,7 +278,9 @@ function agent_move(agent)
 	else
 		agent.going_home = true
 		if agent.path_home == nil then
-			agent.path_home = a_star({agent.x, agent.y}, {agent.home_x, agent.home_y})
+			agent_pos = create_pos(agent.x, agent.y)
+			home_pos = create_pos(agent.home_x, agent.home_y)
+			agent.path_home = a_star(agent_pos, home_pos)
 			agent.path_index = 0
 		end
 		next_pos = agent.path_home[agent.path_index]

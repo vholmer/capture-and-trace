@@ -165,6 +165,8 @@ function make_agents(n)
 			agent.y = rand_y
 			agent.home_x = rand_x
 			agent.home_y = rand_y
+			agent.hunger = flr(rnd(400)) + 100
+			agent.going_home = false
 			matrix[agent.x][agent.y] = "agent"
 			add(agents, agent)
 		end
@@ -211,7 +213,11 @@ function check_empty(x, y, a)
 end
 
 function draw_agent(a)
-	pset(a.x, a.y, 8)
+	if a.going_home then
+		pset(a.x, a.y, 3)
+	else
+		pset(a.x, a.y, 8)
+	end
 end
 
 function get_delta(x, y)
@@ -239,32 +245,48 @@ function act(a)
 end
 
 function agent_move(agent)
-	if 		agent.prev_dx == nil
-		or 	agent.prev_dy == nil
-		or 	change_dir_chance > rnd(1)
-	then
-		dx, dy = get_delta(agent.x, agent.y)
-	else
-		dx = agent.prev_dx
-		dy = agent.prev_dy
-	end
-
-	local empty_coord = false
-	local attempt = 0
-	local num_retries = 10
-	while not empty_coord and attempt < num_retries do
-		empty_coord = check_empty(agent.x + dx, agent.y + dy, agent)
-		if empty_coord then
-			matrix[agent.x][agent.y] = "empty"
-			agent.x += dx
-			agent.y += dy
-			agent.prev_dx = dx
-			agent.prev_dy = dy
-			matrix[agent.x][agent.y] = "agent"
-			break
-		else
-			attempt += 1
+	if agent.hunger > 0 and not agent.going_home then
+		if 		agent.prev_dx == nil
+			or 	agent.prev_dy == nil
+			or 	change_dir_chance > rnd(1)
+		then
 			dx, dy = get_delta(agent.x, agent.y)
+		else
+			dx = agent.prev_dx
+			dy = agent.prev_dy
+		end
+
+		local empty_coord = false
+		local attempt = 0
+		local num_retries = 10
+		while not empty_coord and attempt < num_retries do
+			empty_coord = check_empty(agent.x + dx, agent.y + dy, agent)
+			if empty_coord then
+				matrix[agent.x][agent.y] = "empty"
+				agent.x += dx
+				agent.y += dy
+				agent.prev_dx = dx
+				agent.prev_dy = dy
+				matrix[agent.x][agent.y] = "agent"
+				break
+			else
+				attempt += 1
+				dx, dy = get_delta(agent.x, agent.y)
+			end
+		end
+		agent.hunger -= 1
+	else
+		agent.going_home = true
+		if agent.path_home == nil then
+			agent.path_home = a_star({agent.x, agent.y}, {agent.home_x, agent.home_y})
+			agent.path_index = 0
+		end
+		next_pos = agent.path_home[agent.path_index]
+		agent.x = next_pos.x
+		agent.y = next_pos.y
+		if agent.x == agent.home_x and agent.y == agent.home_y then
+			agent.going_home = false
+			agent.hunger = flr(rnd(400)) + 100
 		end
 	end
 end
@@ -351,7 +373,6 @@ end
 function pos_eq(a,b)
 	return a.x == b.x and a.y == b.y
 end
-
 
 function a_star(start, goal)
 	open_set_q = priorityqueue()

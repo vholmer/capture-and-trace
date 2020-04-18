@@ -49,11 +49,16 @@ function draw_hall()
 end
 
 function make_hall()
-	hall.top_left_x = 32
-	hall.top_left_y = 32
+	hall.top_left_x = flr(rnd(64)) + 16
+	hall.top_left_y = flr(rnd(50)) + 8
 
-	hall.width = 30
-	hall.height = 10
+	if 0.5 > rnd(1) then
+		hall.width = 30
+		hall.height = 10
+	else
+		hall.width = 10
+		hall.height = 30
+	end
 
 	for i = hall.top_left_x, hall.top_left_x + hall.width do
 		for j = hall.top_left_y, hall.top_left_y + hall.height do

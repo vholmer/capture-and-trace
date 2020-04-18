@@ -269,6 +269,165 @@ function agent_move(agent)
 	end
 end
 
+local floor = flr
+
+local priorityqueue = {}
+priorityqueue.__index = priorityqueue
+
+setmetatable(
+		priorityqueue,
+		{
+				__call = function (self)
+						setmetatable({}, self)
+						self:initialize()
+						return self
+				end
+		}
+)
+
+
+function priorityqueue:initialize()
+		--[[  initialization.
+		example:
+				priorityqueue = require("priority_queue")
+				pq = priorityqueue()
+		]]--
+		self.heap = {}
+		self.current_size = 0
+end
+
+function priorityqueue:empty()
+		return self.current_size == 0
+end
+
+function priorityqueue:size()
+		return self.current_size
+end
+
+function priorityqueue:swim()
+		-- swim up on the tree and fix the order heap property.
+		local heap = self.heap
+		local floor = floor
+		local i = self.current_size
+
+		while floor(i / 2) > 0 do
+				local half = floor(i / 2)
+				if heap[i][2] < heap[half][2] then
+						heap[i], heap[half] = heap[half], heap[i]
+				end
+				i = half
+		end
+end
+
+function priorityqueue:put(v, p)
+		--[[ put an item on the queue.
+		args:
+				v: the item to be stored
+				p(number): the priority of the item
+		]]--
+		--
+
+		self.heap[self.current_size + 1] = {v, p}
+		self.current_size = self.current_size + 1
+		self:swim()
+end
+
+function priorityqueue:sink()
+		-- sink down on the tree and fix the order heap property.
+		local size = self.current_size
+		local heap = self.heap
+		local i = 1
+
+		while (i * 2) <= size do
+				local mc = self:min_child(i)
+				if heap[i][2] > heap[mc][2] then
+						heap[i], heap[mc] = heap[mc], heap[i]
+				end
+				i = mc
+		end
+end
+
+function priorityqueue:min_child(i)
+		if (i * 2) + 1 > self.current_size then
+				return i * 2
+		else
+				if self.heap[i * 2][2] < self.heap[i * 2 + 1][2] then
+						return i * 2
+				else
+						return i * 2 + 1
+				end
+		end
+end
+
+function priorityqueue:pop()
+		-- remove and return the top priority item
+		local heap = self.heap
+		local retval = heap[1][1]
+		heap[1] = heap[self.current_size]
+		heap[self.current_size] = nil
+		self.current_size = self.current_size - 1
+		self:sink()
+		return retval
+end
+
+width=128
+function get_id(pos)
+	return pos.y*width+pos.x
+end
+
+function get_pos(id)
+	local pos ={}
+	pos.y = flr(id / width)
+	pos.x = id % width
+	return pos
+end
+
+function get_neighbours(pos)
+	neighs = {}
+	counter = 0
+	for x=-1,1 do
+		for y=-1,1 do
+			if not (x == 0 and y == 0) then
+				newx,newy=pos.x+x,pos.y+y
+				if newx >= 0 and newx < width and newy >= 0 and newy < width then
+					neigh = {}
+					neigh.x = newx
+					neigh.y = newy
+					neighs[counter] = neigh
+					counter += 1
+				end
+			end
+		end
+	end
+	return neighs
+end
+
+function get_default(tbl, i, def)
+	val = tbl[i]
+	if val == nil then
+		return def
+	else
+		return val
+	end
+end
+
+function func_h(a,b)
+	--return abs(a.x-b.x)+abs(a.y-b.y)
+	return (a.x-b.x)^2 + (a.y-b.y)^2
+end
+
+function reconstruct_path(curr, came_from)
+	total_path = {}
+	counter = 0
+	while came_from[get_id(curr)] ~= nil do
+		total_path[counter] = curr
+		curr = came_from[get_id(curr)]
+		counter += 1
+	end
+	return total_path
+end
+
+
 function get_id(pos)
 	return pos.y*size+pos.x
 end

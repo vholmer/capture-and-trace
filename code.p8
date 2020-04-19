@@ -15,6 +15,11 @@ change_dir_chance = 0.1 -- percent
 hit_distance = 3
 home_size = 4
 home_radius = home_size \ 2
+time_cycle = 100
+in_cycle = true
+max_ap = 4
+curr_ap = 4
+et_mouse_over = false
 
 function _init()
 	local n = 100
@@ -25,18 +30,128 @@ function _init()
 end
 
 function _update()
-	foreach(agents, act)
-	user_input()
+	if time_cycle <= 0 then
+		in_cycle = false
+	end
+	if in_cycle then
+		foreach(agents, act)
+	else
+		user_input()
+	end
+	if time_cycle > 0 then
+		time_cycle -= 1
+	end
 end
 
 function _draw()
 	cls(1)
+	rectfill(0, 101, 127, 127, 0)
+	if not in_cycle then
+		rect(0, 101, 127, 127, 6)
+	end
 	foreach(agents, draw_home)
 	foreach(agents, draw_agent)
 	draw_hall()
+	draw_endturn()
+	draw_cycle()
+	draw_ap()
 	draw_mouse()
 	--print("CPU: " .. stat(1), 0, 0, 7)
 	--print("MEM: " .. stat(0), 0, 6, 7)
+end
+
+function draw_ap()
+	ap_top_left_x = 46
+	ap_top_left_y = 111
+	ap_bot_right_x = ap_top_left_x + 28
+	ap_bot_right_y = ap_top_left_y + 6
+
+	if in_cycle then
+		color = 8
+	else
+		color = 6
+	end
+
+	rectfill(
+		ap_top_left_x,
+		ap_top_left_y,
+		ap_bot_right_x,
+		ap_bot_right_y,
+		color
+	)
+
+	print(
+		"ap: " .. curr_ap .. "/" .. max_ap,
+		ap_top_left_x + 1,
+		ap_top_left_y + 1,
+		0
+	)
+end
+
+function draw_cycle()
+	cycle_top_right_x = 124
+	cycle_top_right_y = 105
+	cycle_bot_left_x = cycle_top_right_x - 32
+	cycle_bot_left_y = cycle_top_right_y + 6
+
+	if in_cycle then
+		color = 8
+	else
+		color = 6
+	end
+
+	rectfill(
+		cycle_top_right_x,
+		cycle_top_right_y,
+		cycle_bot_left_x,
+		cycle_bot_left_y,
+		color
+	)
+
+	print(
+		"Cycle: " .. time_cycle \ 10,
+		cycle_top_right_x - 31,
+		cycle_top_right_y + 1,
+		0
+	)
+end
+
+function draw_endturn()
+	end_turn_bot_right_y = 123 -- 109
+	end_turn_bot_right_x = 124 -- 34
+	end_turn_top_left_x = end_turn_bot_right_x - 32
+	end_turn_top_left_y = end_turn_bot_right_y - 6
+
+	if et_mouse_over then
+		color = 3
+	elseif in_cycle then
+		color = 8
+	else
+		color = 6
+	end
+
+	rectfill(
+		end_turn_top_left_x,
+		end_turn_top_left_y,
+		end_turn_bot_right_x,
+		end_turn_bot_right_y,
+		color
+	)
+
+	rect(
+		end_turn_top_left_x - 1,
+		end_turn_top_left_y - 1,
+		end_turn_bot_right_x + 1,
+		end_turn_bot_right_y + 1,
+		5
+	)
+
+	print(
+		"End turn",
+		end_turn_top_left_x + 1,
+		end_turn_top_left_y + 1,
+		0
+	)
 end
 
 function draw_hall()
@@ -113,28 +228,28 @@ end
 function user_input()
 	local mouse_x = stat(32)
 	local mouse_y = stat(33)
-	--if stat(34) == 1 then
-	--	for i = 0, hit_distance do
-	--		for j = 0, hit_distance do
-	--			if matrix[mouse_x-i][mouse_y-j] == 1 then
-	--				hit = true
-	--				goto hit_break
-	--			end
-	--		end
-	--	end
-	--	::hit_break::
-	--	if hit then
-	--		for agent in all(agents) do
-	--			if 		abs(agent.x - mouse_x) <= hit_distance
-	--				and abs(agent.y - mouse_y) <= hit_distance
-	--			then
-	--				del(agents, agent)
-	--				matrix[agent.x][agent.y] = 0
-	--				break
-	--			end
-	--		end
-	--	end
-	--end
+
+	if 		mouse_x >= end_turn_top_left_x
+		and mouse_x <= end_turn_bot_right_x
+		and mouse_y >= end_turn_top_left_y
+		and mouse_y <= end_turn_bot_right_y
+	then
+		et_mouse_over = true
+	else
+		et_mouse_over = false
+	end
+	
+	if stat(34) == 1 then
+		if 		mouse_x >= end_turn_top_left_x
+			and mouse_x <= end_turn_bot_right_x
+			and mouse_y >= end_turn_top_left_y
+			and mouse_y <= end_turn_bot_right_y
+		then
+			et_mouse_over = false
+			in_cycle = true
+			time_cycle = 100
+		end
+	end
 end
 
 function make_world()

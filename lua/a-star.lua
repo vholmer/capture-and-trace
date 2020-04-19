@@ -58,7 +58,7 @@ function reconstruct_path(curr, came_from)
 	counter = 1
 	while came_from[get_id(curr)] ~= nil do
 		total_path[counter] = curr
-		print(get_id(curr))
+		--print(get_id(curr))
 		curr = came_from[get_id(curr)]
 		counter += 1
 	end

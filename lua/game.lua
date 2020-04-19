@@ -20,12 +20,15 @@ function user_input()
 		then
 			et_mouse_over = false
 			in_cycle = true
+			if cycle_count < 99 then
+				cycle_count += 1
+			else
+				cycle_count = 99
+			end
 			time_cycle = 100
 		end
 	end
 end
-
-
 
 function check_empty(x, y, a)
 	local top_left_x = 0
@@ -87,7 +90,57 @@ function get_delta(x, y)
 end
 
 function act(a)
+	agent_snatch(a)
 	agent_move(a)
+end
+
+function get_nearby_snatcher(agent)
+	local result, coords
+
+	top_left_x = agent.x - snatch_radius
+	top_left_y = agent.y - snatch_radius
+	bot_right_x = agent.x + snatch_radius
+	bot_right_y = agent.y + snatch_radius
+
+	if top_left_x < min_x then top_left_x = min_x end
+	if top_left_y < min_y then top_left_y = min_y end
+	if bot_right_x > max_x then bot_right_x = max_x end
+	if bot_right_y > max_y then bot_right_y = max_y end
+
+	for i = top_left_x, bot_right_x do
+		for j = top_left_y, bot_right_y do
+			if 		matrix[i][j] == "snatcher"
+				and agent.x ~= i
+				and agent.y ~= j
+			then
+				coords = {i, j}
+				break
+			end
+		end
+		if coords ~= nil then break end
+	end
+
+	if coords ~= nil then
+		for agent in all(agents) do
+			if 		agent.x == coords[1]
+				and agent.y == coords[2]
+			then
+				result = agent
+				break
+			end
+		end
+	end
+
+	return result
+end
+
+function agent_snatch(agent)
+	result = get_nearby_snatcher(agent)
+	if result ~= nil then
+		if snatch_chance > rnd(0.1) then
+			agent.snatcher = true
+		end
+	end
 end
 
 function agent_move(agent)
@@ -112,7 +165,11 @@ function agent_move(agent)
 			agent.y += dy
 			agent.prev_dx = dx
 			agent.prev_dy = dy
-			matrix[agent.x][agent.y] = "agent"
+			if agent.snatcher then
+				matrix[agent.x][agent.y] = "snatcher"
+			else
+				matrix[agent.x][agent.y] = "agent"
+			end
 			break
 		else
 			attempt += 1

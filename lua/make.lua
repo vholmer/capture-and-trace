@@ -27,7 +27,7 @@ function make_agents(n)
 			agent.y = rand_y
 			agent.home_x = rand_x
 			agent.home_y = rand_y
-			agent.snatcher = first_snatcher
+			agent.is_snatcher = first_snatcher
 			if first_snatcher then
 				matrix[agent.x][agent.y] = "snatcher"
 			else

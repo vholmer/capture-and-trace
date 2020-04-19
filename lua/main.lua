@@ -12,6 +12,7 @@ function _update()
 	end
 	if in_cycle then
 		foreach(agents, act)
+		is_game_over()
 	else
 		user_input()
 	end

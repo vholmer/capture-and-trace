@@ -19,4 +19,4 @@ max_ap = 4
 curr_ap = 4
 et_mouse_over = false
 snatch_radius = 3
-snatch_chance = 0.01 -- percent
+snatch_chance = 0.1 -- percent

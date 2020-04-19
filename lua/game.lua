@@ -30,6 +30,15 @@ function user_input()
 	end
 end
 
+function is_game_over()
+	for agent in all(agents) do
+		if not agent.is_snatcher then
+			return false
+		end
+	end
+	return true
+end
+
 function check_empty(x, y, a)
 	local top_left_x = 0
 	local top_left_y = 0
@@ -90,7 +99,9 @@ function get_delta(x, y)
 end
 
 function act(a)
-	agent_snatch(a)
+	if not a.is_snatcher then
+		agent_get_snatched(a)
+	end
 	agent_move(a)
 end
 
@@ -134,11 +145,11 @@ function get_nearby_snatcher(agent)
 	return result
 end
 
-function agent_snatch(agent)
+function agent_get_snatched(agent)
 	snatcher = get_nearby_snatcher(agent)
 	if snatcher ~= nil then
-		if snatch_chance > rnd(0.1) then
-			agent.snatcher = true
+		if snatch_chance > rnd(1) then
+			agent.is_snatcher = true
 		end
 	end
 end
@@ -165,7 +176,7 @@ function agent_move(agent)
 			agent.y += dy
 			agent.prev_dx = dx
 			agent.prev_dy = dy
-			if agent.snatcher then
+			if agent.is_snatcher then
 				matrix[agent.x][agent.y] = "snatcher"
 			else
 				matrix[agent.x][agent.y] = "agent"

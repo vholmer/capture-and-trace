@@ -1,7 +1,7 @@
 function draw_ap()
-	ap_top_left_x = 48
+	ap_top_left_x = 46
 	ap_top_left_y = 111
-	ap_bot_right_x = ap_top_left_x + 28
+	ap_bot_right_x = ap_top_left_x + 33
 	ap_bot_right_y = ap_top_left_y + 6
 
 	if in_cycle then
@@ -130,8 +130,8 @@ end
 
 function draw_agent(a)
 	-- and false because debugging feature toggle
-	if 		a.snatcher
-		and false
+	if 		a.is_snatcher
+		and true
 	then
 		pset(a.x, a.y, 9)
 	else

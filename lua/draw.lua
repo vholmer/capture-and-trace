@@ -158,10 +158,6 @@ function draw_mouse()
 	pset(mouse_x - 1, mouse_y + 1, 7)
 	pset(mouse_x + 1, mouse_y - 1, 7)
 	pset(mouse_x + 1, mouse_y + 1, 7)
-	pset(mouse_x - 2, mouse_y - 2, 7)
-	pset(mouse_x - 2, mouse_y + 2, 7)
-	pset(mouse_x + 2, mouse_y - 2, 7)
-	pset(mouse_x + 2, mouse_y + 2, 7)
 
 	if stat(34) == 1 then
 		pset(mouse_x, mouse_y, 7)

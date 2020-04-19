@@ -8,9 +8,18 @@ end
 
 function _update()
 	if time_cycle <= 0 then
-		in_cycle = false
-		reset_ap = true
-		max_ap = cycle_count + 1
+		if in_cycle then
+			if max_ap < ap_limit then
+				max_ap += 5
+			end
+			if cycle_count < 99 then
+				cycle_count += 1
+			else
+				cycle_count = 99
+			end
+			in_cycle = false
+			reset_ap = true
+		end
 	end
 	if in_cycle then
 		foreach(agents, act)
@@ -29,6 +38,8 @@ function _update()
 	if time_cycle > 0 then
 		time_cycle -= 1
 	end
+	foreach(particles, particle_act)
+	foreach(exp_circles, circle_act)
 end
 
 function _draw()
@@ -40,6 +51,8 @@ function _draw()
 	foreach(agents, draw_home)
 	foreach(agents, draw_agent)
 	draw_hall()
+	draw_exp_circles()
+	draw_particles()
 	draw_endturn()
 	draw_cycle()
 	draw_ap()
@@ -47,6 +60,7 @@ function _draw()
 	if game_over then
 		draw_game_over()
 	end
+	draw_capture()
 	draw_mouse()
 	--print("CPU: " .. stat(1), 0, 0, 7)
 	--print("MEM: " .. stat(0), 0, 6, 7)

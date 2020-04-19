@@ -23,6 +23,7 @@ function make_agents(n)
 		agent.y = rand_y
 		agent.home_x = rand_x
 		agent.home_y = rand_y
+		agent.is_captured = false
 		agent.home_opn_indx = 1 + flr(rnd(3))
 		matrix[agent.x][agent.y] = "agent"
 		agent.hunger = flr(rnd(400)) + 100
@@ -53,10 +54,23 @@ function make_hall()
 		hall.height = 30
 	end
 
-	for i = hall.top_left_x, hall.top_left_x + hall.width do
-		for j = hall.top_left_y, hall.top_left_y + hall.height do
-			matrix[i][j] = "hall"
-		end
+	hall.bot_right_x = hall.top_left_x + hall.width
+	hall.bot_right_y = hall.top_left_y + hall.height
+
+	for i = hall.top_left_x, hall.bot_right_x do
+		matrix[i][hall.top_left_y] = "hall"
+	end
+
+	for i = hall.top_left_x, hall.bot_right_x do
+		matrix[i][hall.bot_right_y] = "hall"
+	end
+
+	for i = hall.top_left_y, hall.bot_right_y do
+		matrix[hall.top_left_x][i] = "hall"
+	end
+
+	for i = hall.top_left_y, hall.bot_right_y do
+		matrix[hall.bot_right_x][i] = "hall"
 	end
 end
 
@@ -80,6 +94,125 @@ function make_home(agent)
 		end
 		if agent.home_opn_indx ~= 3 then
 			matrix[bot_right_x][i] = "home"
+		end
+	end
+end
+
+function make_exp_circle(x, y, speed, max_r, col)
+	local circle = {}
+	circle.x = x
+	circle.y = y
+	circle.r = 0
+	circle.max_r = max_r
+	circle.speed = speed
+	circle.col = col
+	add(exp_circles, circle)
+end
+
+function make_particle_point(x, y, n, col)
+	for i = 0, n do
+		local particle = {}
+		particle.x = x
+		particle.y = y
+		particle.col = col
+		particle.floor_y = y + 2
+		particle.life = flr(rnd(10)) + 5
+
+		particle.dx = rnd(0.1) - 0.2
+		particle.dy = rnd(0.5) * -1
+
+		add(particles, particle)
+	end
+end
+
+function make_particle_line(x1, y1, x2, y2, n, col1, col2)
+	local x, y, dx, dy, dx1, dy1, px, py, xe, ye
+
+	dx = x2 - x1
+	dy = y2 - y1
+
+	dx1 = abs(dx)
+	dy1 = abs(dy)
+
+	px = 2 * dy1 - dx1
+	py = 2 * dx1 - dy1
+
+	if dy1 <= dx1 then
+		if dx >= 0 then
+			x = x1
+			y = y1
+			xe = x2
+		else
+			x = x2
+			y = y2
+			xe = x1
+		end
+
+		if 0.5 > rnd(1) then
+			make_particle_point(x, y, n, col1)
+		else
+			make_particle_point(x, y, n, col2)
+		end
+
+		while x < xe do
+			x += 1
+			if px < 0 then
+				px += 2 * dy1
+			else
+				if 		(dx < 0 and dy < 0)
+					or 	(dx > 0 and dy > 0)
+				then
+					y += 1
+				else
+					y -= 1
+				end
+				px += 2 * (dy1 - dx1)
+			end
+
+			if 0.5 > rnd(1) then
+				make_particle_point(x, y, n, col1)
+			else
+				make_particle_point(x, y, n, col2)
+			end
+		end
+	else
+		if dy >= 0 then
+			x = x1
+			y = y1
+			ye = y2
+		else
+			x = x2
+			y = y2
+			ye = y1
+		end
+
+		if 0.5 > rnd(1) then
+			make_particle_point(x, y, n, col1)
+		else
+			make_particle_point(x, y, n, col2)
+		end
+
+		while y < ye do
+			y += 1
+			if py <= 0 then
+				py += 2 * dx1
+			else
+				if		(dx < 0 and dy < 0)
+					or	(dx > 0 and dy > 0)
+				then
+					x += 1
+				else
+					x -= 1
+				end
+
+				py += 2 * (dx1 - dy1)
+			end
+
+			if 0.5 > rnd(1) then
+				make_particle_point(x, y, n, col1)
+			else
+				make_particle_point(x, y, n, col2)
+			end
 		end
 	end
 end

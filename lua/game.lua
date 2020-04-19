@@ -57,21 +57,56 @@ function user_input()
 		end
 	end
 	
-	if stat(34) == 1 then
+	if stat(34) == 1 then -- left click
 		if 		mouse_x >= end_turn_top_left_x
 			and mouse_x <= end_turn_bot_right_x
 			and mouse_y >= end_turn_top_left_y
 			and mouse_y <= end_turn_bot_right_y
 			and not buttons_disabled
 		then
+			capturing = false
 			et_mouse_over = false
 			in_cycle = true
-			if cycle_count < 99 then
-				cycle_count += 1
-			else
-				cycle_count = 99
-			end
 			time_cycle = 100
+		end
+
+		if		mouse_x >= capture_top_left_x
+			and mouse_x <= capture_bot_right_x
+			and mouse_y >= capture_top_left_y
+			and mouse_y <= capture_bot_right_y
+		then
+			capturing = true
+		end
+
+		if capturing and agent_to_capture ~= nil then
+			if curr_ap >= 5 then
+				rand_x = flr(rnd(hall.bot_right_x - hall.top_left_x)) + hall.top_left_x
+				rand_y = flr(rnd(hall.bot_right_y - hall.top_left_y)) + hall.top_left_y
+
+				make_particle_line(
+					agent_to_capture.x,
+					agent_to_capture.y,
+					rand_x,
+					rand_y,
+					3,
+					9,
+					10
+				)
+
+				make_exp_circle(
+					rand_x,
+					rand_y,
+					0.6,
+					8,
+					10
+				)
+
+				agent_to_capture.x = rand_x
+				agent_to_capture.y = rand_y
+				agent_to_capture.is_captured = true
+				curr_ap -= 5
+				agent_to_capture = nil
+			end
 		end
 
 		if 		go_no_top_left_x ~= nil
@@ -95,6 +130,8 @@ function user_input()
 				stop()
 			end
 		end
+	elseif stat(34) == 2 then -- right click
+		capturing = false
 	end
 end
 
@@ -173,6 +210,28 @@ function act(a)
 	agent_move(a)
 end
 
+function circle_act(c)
+	if c.r >= c.max_r then
+		del(exp_circles, c)
+	end
+end
+
+function particle_act(p)
+	if 	p.life <= 0 then
+		del(particles, p)
+		p = nil
+		return
+	end
+
+	if p.y + p.dy > p.floor_y then p.dy *= -0.8 end
+
+	p.x += p.dx
+	p.y += p.dy
+	p.dy += 0.1
+
+	p.life -= 1
+end
+
 function sign(x)
 	if x < 0 then return -1 elseif x == 0 then return 0 else return 1 end
 end
@@ -223,7 +282,7 @@ end
 
 function agent_get_snatched(agent)
 	snatcher = get_nearby_snatcher(agent)
-	if snatcher ~= nil then
+	if snatcher ~= nil and not agent.is_captured then
 		if snatch_chance > rnd(1) then
 			agent.is_snatcher = true
 		end
@@ -231,8 +290,15 @@ function agent_get_snatched(agent)
 end
 
 function agent_move(agent)
+	if 		(agent.x <= hall.top_left_x or agent.x >= hall.bot_right_x)
+		and (agent.y <= hall.top_left_y or agent.y >= hall.bot_right_y)
+	then
+		agent.is_captured = false
+	end
+
 	if agent.hunger < 0 or agent.going_home then
 		agent.going_home = true
+		agent.is_captured = false
 
 		if agent.x == agent.home_x and agent.y == agent.home_y then
 			agent.going_home = false

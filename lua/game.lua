@@ -162,13 +162,53 @@ function agent_move(agent)
 			agent.going_home = false
 			agent.hunger = flr(rnd(400)) + 100
 		else
+			matrix[agent.x][agent.y] = "empty"
+
 			xdir = move_dir(agent.home_x, agent.x)
 			ydir = move_dir(agent.home_y, agent.y)
-			if xdir ~= 0 then
-				agent.x += sign(xdir)
-			else
-				agent.y += sign(ydir)
+			xdir = sign(xdir)
+			ydir = sign(ydir)
+
+			-- Can we move horizontal
+			can_mov_hor = matrix[agent.x+xdir][agent.y] ~= "hall"
+			-- Can we move vertical
+			can_mov_ver = matrix[agent.x][agent.y+ydir] ~= "hall"
+
+			moved = false
+			outputfile = "output.txt"
+
+			if not moved and xdir ~= 0 and can_mov_hor and agent.emerg_dir_x == nil then
+				agent.x += xdir
+				agent.emerg_dir_y = nil
+				moved = true
 			end
+
+			if not moved and ydir ~= 0 and can_mov_ver and agent.emerg_dir_y == nil then
+				agent.y += ydir
+				agent.emerg_dir_x = nil
+				moved = true
+			end
+
+			if not moved and agent.emerg_dir_y ~= nil then
+				agent.y += agent.emerg_dir_y
+				moved = true
+			end
+
+			if not moved and agent.emerg_dir_x ~= nil then
+				agent.x += agent.emerg_dir_x
+				moved = true
+			end
+
+			if not moved then
+				if xdir ~= 0 and not can_mov_hor then
+					agent.emerg_dir_y = 1
+				else
+					agent.emerg_dir_x = 1
+				end
+			end
+
+			matrix[agent.x][agent.y] = "agent"
+
 		end
 		return
 	end

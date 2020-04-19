@@ -163,18 +163,12 @@ function draw_mouse()
 end
 
 function draw_agent(a)
+	-- and false because debugging feature toggle
 	if 		a.snatcher
+		and false
 	then
-		if a.going_home then
-			pset(a.x, a.y, 11)
-		else
-			pset(a.x, a.y, 9)
-		end
+		pset(a.x, a.y, 9)
 	else
-		if a.going_home then
-			pset(a.x, a.y, 14)
-		else
-			pset(a.x, a.y, 8)
-		end
+		pset(a.x, a.y, 8)
 	end
 end

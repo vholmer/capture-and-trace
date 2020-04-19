@@ -79,9 +79,6 @@ function pos_eq(a,b)
 end
 
 function a_star(start, goal)
-	--print("Running our path")
-	--print(start.x..','..start.y)
-	--print(goal.x..','..goal.y)
 	local open_set_q = priorityqueue()
 	local open_set_tb = {}
 
@@ -91,7 +88,7 @@ function a_star(start, goal)
 
 	g_scores[get_id(start)] = 0
 	local curr = nil
-	print(curr)
+	--print(curr)
 
 	while not open_set_q:empty() or curr == nil do
 		--print("Insude the loop")
@@ -105,10 +102,8 @@ function a_star(start, goal)
 		curr_id = get_id(curr)
 
 		if pos_eq(curr, goal) then
-			print('Reached the goal')
 			return reconstruct_path(curr, came_from)
 		end
-		--print("At new curr")
 		ns = get_neighbours(curr)
 		for i, n in pairs(ns) do
 			-- if matrix[n.x][n.y] ~= "empty" then
@@ -130,5 +125,4 @@ function a_star(start, goal)
 			::continue_iterate::
 		end
 	end
-  print("Reached the end")
  end

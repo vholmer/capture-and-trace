@@ -59,7 +59,6 @@ function make_home(agent)
 	local bot_right_x = agent.home_x + home_radius
 	local bot_right_y = agent.home_y + home_radius
 
-
 	for i = top_left_x, bot_right_x do
 		if agent.home_opn_indx ~= 0 then
 			matrix[i][top_left_y] = "home"

@@ -120,7 +120,7 @@ function make_particle_point(x, y, n, col)
 		particle.life = flr(rnd(10)) + 5
 
 		particle.dx = rnd(0.1) - 0.2
-		particle.dy = rnd(0.5) * -1
+		particle.dy = rnd(0.1) * -1
 
 		add(particles, particle)
 	end

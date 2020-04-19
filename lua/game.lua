@@ -128,7 +128,7 @@ function user_input()
 		end
 
 		if tracing and agent_to_trace ~= nil then
-			trace_cost = 20
+			trace_cost = 5
 			if curr_ap >= trace_cost then
 				agent_to_trace.trace_depth += 1
 
@@ -149,8 +149,30 @@ function user_input()
 				end
 
 				if next_snatcher == nil then
-					curr_ap -= 15
-					tracing = false
+					curr_ap -= trace_cost
+					if not agent_to_trace.is_snatcher then
+						make_particle_line(
+							agent_to_trace.x,
+							agent_to_trace.y,
+							agent_to_trace.home_x,
+							agent_to_trace.home_y,
+							3,
+							9,
+							10,
+							1
+						)
+
+						agent_to_trace.x = agent_to_trace.home_x
+						agent_to_trace.y = agent_to_trace.home_y
+
+						make_exp_circle(
+							agent_to_trace.home_x,
+							agent_to_trace.home_y,
+							0.6,
+							8,
+							10
+						)
+					end
 					agent_to_trace = nil
 					return
 				end

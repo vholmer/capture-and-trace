@@ -90,8 +90,35 @@ function act(a)
 	agent_move(a)
 end
 
+function sign(x)
+	if x < 0 then return -1 elseif x == 0 then return 0 else return 1 end
+end
+
+function move_dir(target, goal)
+	return (target - goal)
+end
+
 function agent_move(agent)
-	if 		agent.prev_dx == nil
+	if agent.hunger < 0 or agent.going_home then
+		agent.going_home = true
+
+		if agent.x == agent.home_x and agent.y == agent.home_y then
+			agent.going_home = false
+			agent.hunger = flr(rnd(400)) + 100
+		else
+			xdir = move_dir(agent.home_x, agent.x)
+			ydir = move_dir(agent.home_y, agent.y)
+			if xdir ~= 0 then
+				agent.x += sign(xdir)
+			else
+				agent.y += sign(ydir)
+			end
+		end
+		return
+	end
+	agent.hunger -= 1
+
+	if 	agent.prev_dx == nil
 		or 	agent.prev_dy == nil
 		or 	change_dir_chance > rnd(1)
 	then

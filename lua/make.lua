@@ -28,6 +28,7 @@ function make_agents(n)
 			agent.home_y = rand_y
 			agent.home_opn_indx = 1 + flr(rnd(3))
 			matrix[agent.x][agent.y] = "agent"
+			agent.hunger = flr(rnd(400)) + 100
 			add(agents, agent)
 		end
 	end

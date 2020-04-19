@@ -109,6 +109,10 @@ function draw_home(agent)
 	local bot_right_y = agent.home_y + home_radius
 	local opn_indx = agent.home_opn_indx
 
+	-- if agent.going_home then
+	-- 	rectfill(agent.home_x, agent.home_y, agent.home_x, agent.home_y, 10)
+	-- end
+
 	local debugging = false
 	if debugging then home_cnt += 1 end
 
@@ -159,5 +163,9 @@ function draw_mouse()
 end
 
 function draw_agent(a)
-	pset(a.x, a.y, 8)
+	col = 8
+	-- if a.going_home ~= nil and a.going_home == true then
+	-- 	col = 11
+	-- end
+	pset(a.x, a.y, col)
 end

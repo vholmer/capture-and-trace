@@ -160,6 +160,8 @@ function agent_move(agent)
 
 		if agent.x == agent.home_x and agent.y == agent.home_y then
 			agent.going_home = false
+			agent.emerg_dir_x = nil
+			agent.emerg_dir_y = nil
 			agent.hunger = flr(rnd(400)) + 100
 		else
 			matrix[agent.x][agent.y] = "empty"

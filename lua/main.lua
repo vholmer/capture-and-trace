@@ -10,6 +10,8 @@ end
 function _update()
 	if time_cycle <= 0 then
 		in_cycle = false
+		reset_ap = true
+		max_ap = cycle_count + 1
 	end
 	if in_cycle then
 		foreach(agents, act)
@@ -19,6 +21,10 @@ function _update()
 			in_cycle = false
 		end
 	else
+		if reset_ap == nil or reset_ap then
+			curr_ap = max_ap
+			reset_ap = false
+		end
 		user_input()
 	end
 	if time_cycle > 0 then

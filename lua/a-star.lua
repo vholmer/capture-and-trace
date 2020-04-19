@@ -17,7 +17,8 @@ function get_neighbours(pos)
 		for y=-1,1 do
 			if not (x == 0 and y == 0) then
 				newx,newy=pos.x+x,pos.y+y
-				if newx >= 0 and newx < width and newy >= 0 and newy < width then
+				if not (x == 0 or y == 0) and
+						newx >= 0 and newx < width and newy >= 0 and newy < width then
 					neigh = {}
 					neigh.x = newx
 					neigh.y = newy

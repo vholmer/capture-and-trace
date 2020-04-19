@@ -52,7 +52,7 @@ function check_empty(x, y, a)
 
 	for i = top_left_x, bot_right_x do
 		for j = top_left_y, bot_right_y do
-			if matrix[i][j] == "agent" or matrix[i][j] == "hall" then
+			if matrix[i][j] == "agent" or matrix[i][j] == "hall" or matrix[i][j] == "home" then
 				if a ~= nil and i == a.x and j == a.y then
 					goto continue_check_empty
 				else

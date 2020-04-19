@@ -26,6 +26,7 @@ function make_agents(n)
 			agent.y = rand_y
 			agent.home_x = rand_x
 			agent.home_y = rand_y
+			agent.home_opn_indx = 1 + flr(rnd(3))
 			matrix[agent.x][agent.y] = "agent"
 			add(agents, agent)
 		end
@@ -57,12 +58,21 @@ function make_home(agent)
 	local bot_right_x = agent.home_x + home_radius
 	local bot_right_y = agent.home_y + home_radius
 
+
 	for i = top_left_x, bot_right_x do
-		matrix[i][top_left_y] = "home"
-		matrix[i][bot_right_y] = "home"
+		if agent.home_opn_indx ~= 0 then
+			matrix[i][top_left_y] = "home"
+		end
+		if agent.home_opn_indx ~=2 then
+			matrix[i][bot_right_y] = "home"
+		end
 	end
 	for i = top_left_y, bot_right_y do
-		matrix[top_left_x][i] = "home"
-		matrix[bot_right_x][i] = "home"
+		if agent.home_opn_indx ~= 1 then
+			matrix[top_left_x][i] = "home"
+		end
+		if agent.home_opn_indx ~= 3 then
+			matrix[bot_right_x][i] = "home"
+		end
 	end
 end

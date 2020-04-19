@@ -169,8 +169,11 @@ function agent_move(agent)
 		end
 		return
 	end
-	agent.hunger -= 1
 
+	if not agent.snatcher then
+		agent.hunger -= 1
+	end
+		
 	if 	agent.prev_dx == nil
 		or 	agent.prev_dy == nil
 		or 	change_dir_chance > rnd(1)

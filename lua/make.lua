@@ -12,7 +12,7 @@ function make_agents(n)
 	for i = 1, n do
 		local agent = {}
 		local attempt = 0
-		local num_retries = 10
+		local num_retries = 30
 		local empty_coord = false
 		local rand_x = -1
 		local rand_y = -1
@@ -37,6 +37,7 @@ function make_agents(n)
 				matrix[agent.x][agent.y] = "agent"
 			end
 			add(agents, agent)
+			make_home(agent)
 		end
 		first_snatcher = false
 	end

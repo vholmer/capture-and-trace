@@ -11,33 +11,28 @@ function make_agents(n)
 	first_snatcher = true
 	for i = 1, n do
 		local agent = {}
-		local attempt = 0
-		local num_retries = 10
 		local empty_coord = false
 		local rand_x = -1
 		local rand_y = -1
-		while not empty_coord and attempt < num_retries do
+		while not empty_coord do
 			rand_x = flr(rnd(max_x - min_x)) + min_x
 			rand_y = flr(rnd(max_y - min_y)) + min_y
 			empty_coord = check_empty(rand_x, rand_y, nil)
-			attempt += 1
 		end
-		if attempt < num_retries then
-			agent.x = rand_x
-			agent.y = rand_y
-			agent.home_x = rand_x
-			agent.home_y = rand_y
-			agent.home_opn_indx = 1 + flr(rnd(3))
+		agent.x = rand_x
+		agent.y = rand_y
+		agent.home_x = rand_x
+		agent.home_y = rand_y
+		agent.home_opn_indx = 1 + flr(rnd(3))
+		matrix[agent.x][agent.y] = "agent"
+		agent.hunger = flr(rnd(400)) + 100
+		agent.is_snatcher = first_snatcher
+		if first_snatcher then
+			matrix[agent.x][agent.y] = "snatcher"
+		else
 			matrix[agent.x][agent.y] = "agent"
-			agent.hunger = flr(rnd(400)) + 100
-			agent.is_snatcher = first_snatcher
-			if first_snatcher then
-				matrix[agent.x][agent.y] = "snatcher"
-			else
-				matrix[agent.x][agent.y] = "agent"
-			end
-			add(agents, agent)
 		end
+		add(agents, agent)
 		first_snatcher = false
 	end
 end

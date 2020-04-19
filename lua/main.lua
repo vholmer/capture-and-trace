@@ -22,6 +22,7 @@ function _update()
 		end
 	end
 	if in_cycle then
+		capturing = false
 		foreach(agents, act)
 		game_over = is_game_over()
 		if game_over then

@@ -64,10 +64,12 @@ function user_input()
 			and mouse_y <= end_turn_bot_right_y
 			and not buttons_disabled
 		then
+			agent_to_capture = nil
 			capturing = false
 			et_mouse_over = false
 			in_cycle = true
 			time_cycle = 100
+			return
 		end
 
 		if		mouse_x >= capture_top_left_x
@@ -80,8 +82,8 @@ function user_input()
 
 		if capturing and agent_to_capture ~= nil then
 			if curr_ap >= 5 then
-				rand_x = flr(rnd(hall.bot_right_x - hall.top_left_x)) + hall.top_left_x
-				rand_y = flr(rnd(hall.bot_right_y - hall.top_left_y)) + hall.top_left_y
+				rand_x = flr(rnd(hall.bot_right_x - hall.top_left_x - 1)) + hall.top_left_x + 1
+				rand_y = flr(rnd(hall.bot_right_y - hall.top_left_y - 1)) + hall.top_left_y + 1
 
 				make_particle_line(
 					agent_to_capture.x,

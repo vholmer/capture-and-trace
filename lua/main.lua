@@ -1,5 +1,5 @@
 function _init()
-	local n = 100
+	local n = 50
 	make_world()
 	make_hall()
 	make_agents(n)

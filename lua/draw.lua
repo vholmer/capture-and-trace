@@ -1,6 +1,6 @@
 function draw_ap()
 	ap_top_left_x = 46
-	ap_top_left_y = 111
+	ap_top_left_y = 110
 	ap_bot_right_x = ap_top_left_x + 33
 	ap_bot_right_y = ap_top_left_y + 6
 
@@ -59,10 +59,10 @@ function draw_cycle()
 end
 
 function draw_endturn()
-	end_turn_bot_right_y = 123 -- 109
-	end_turn_bot_right_x = 124 -- 34
+	end_turn_bot_right_y = 122
+	end_turn_bot_right_x = 124
 	end_turn_top_left_x = end_turn_bot_right_x - 32
-	end_turn_top_left_y = end_turn_bot_right_y - 6
+	end_turn_top_left_y = end_turn_bot_right_y - 7
 
 	if game_over then
 		color = 8

@@ -26,10 +26,13 @@ function make_agents(n)
 		agent.home_opn_indx = 1 + flr(rnd(3))
 		matrix[agent.x][agent.y] = "agent"
 		agent.hunger = flr(rnd(400)) + 100
-		agent.is_snatcher = first_snatcher
 		if first_snatcher then
+			agent.is_snatcher = true
+			agent.snatcher_zero = true
 			matrix[agent.x][agent.y] = "snatcher"
 		else
+			agent.snatcher_zero = false
+			agent.is_snatcher = false
 			matrix[agent.x][agent.y] = "agent"
 		end
 		add(agents, agent)

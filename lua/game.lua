@@ -147,6 +147,9 @@ function agent_snatch(agent)
 	if result ~= nil then
 		if snatch_chance > rnd(0.1) then
 			agent.snatcher = true
+			-- prevent snatched agent from going home
+			agent.hunger = 100
+			agent.going_home = false
 		end
 	end
 end

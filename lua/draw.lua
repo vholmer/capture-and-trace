@@ -101,13 +101,47 @@ function draw_hall()
 	)
 end
 
+home_cnt = 0
 function draw_home(agent)
 	local top_left_x = agent.home_x - home_radius
 	local top_left_y = agent.home_y - home_radius
 	local bot_right_x = agent.home_x + home_radius
 	local bot_right_y = agent.home_y + home_radius
+	local opn_indx = agent.home_opn_indx
 
-	rect(top_left_x, top_left_y, bot_right_x, bot_right_y, 13)
+	-- if agent.going_home then
+	-- 	rectfill(agent.home_x, agent.home_y, agent.home_x, agent.home_y, 10)
+	-- end
+
+	local debugging = false
+	if debugging then home_cnt += 1 end
+
+	if (not debugging) or flr(home_cnt / 120) % 2 == 0 then
+		-- Top
+		if opn_indx ~= 0 then
+			line(top_left_x, top_left_y, bot_right_x, top_left_y, 13)
+		end
+		if opn_indx ~= 1 then
+			-- Left
+			line(top_left_x, top_left_y, top_left_x, bot_right_y, 13)
+		end
+		if opn_indx ~= 2 then
+			--Bottom
+			line(top_left_x, bot_right_y, bot_right_x, bot_right_y, 13)
+		end
+		if opn_indx ~= 3 then
+			-- Right
+			line(bot_right_x, top_left_y, bot_right_x, bot_right_y, 13)
+		end
+	else
+		for x=0,127 do
+			for y=0,127 do
+				if matrix[x][y] == "home" then
+					rectfill(x,y,x,y,0)
+				end
+			end
+		end
+	end
 end
 
 function draw_mouse()

@@ -1,6 +1,6 @@
 function draw_ap()
 	ap_top_left_x = 46
-	ap_top_left_y = 110
+	ap_top_left_y = 112
 	ap_bot_right_x = ap_top_left_x + 33
 	ap_bot_right_y = ap_top_left_y + 6
 
@@ -30,7 +30,7 @@ end
 
 function draw_cycle()
 	cycle_top_right_x = 124
-	cycle_top_right_y = 105
+	cycle_top_right_y = 106
 	cycle_bot_left_x = cycle_top_right_x - 32
 	cycle_bot_left_y = cycle_top_right_y + 6
 
@@ -62,7 +62,7 @@ function draw_endturn()
 	end_turn_bot_right_y = 122
 	end_turn_bot_right_x = 124
 	end_turn_top_left_x = end_turn_bot_right_x - 32
-	end_turn_top_left_y = end_turn_bot_right_y - 7
+	end_turn_top_left_y = end_turn_bot_right_y - 6
 
 	if game_over then
 		color = 8
@@ -285,4 +285,82 @@ function draw_game_over()
 		go_no_top_left_y + 2,
 		0
 	)
+end
+
+function draw_actions()
+	capture_top_left_x = 3
+	capture_top_left_y = 105
+	capture_bot_right_x = 33
+	capture_bot_right_y = capture_top_left_y + 8
+
+	if game_over then
+		color = 8
+	elseif capture_mouse_over and not buttons_disabled then
+		color = 3
+	elseif in_cycle then
+		color = 8
+	else
+		color = 6
+	end
+
+	rectfill(
+		capture_top_left_x,
+		capture_top_left_y,
+		capture_bot_right_x,
+		capture_bot_right_y,
+		color
+	)
+
+	rect(
+		capture_top_left_x,
+		capture_top_left_y,
+		capture_bot_right_x,
+		capture_bot_right_y,
+		5
+	)
+
+	print(
+		"Capture",
+		capture_top_left_x + 2,
+		capture_top_left_y + 2,
+		0
+	)
+
+	trace_top_left_x = 3
+	trace_top_left_y = 115
+	trace_bot_right_x = 33
+	trace_bot_right_y = trace_top_left_y + 8
+
+	if game_over then
+		color = 8
+	elseif trace_mouse_over and not buttons_disabled then
+		color = 3
+	elseif in_cycle then
+		color = 8
+	else
+		color = 6
+	end
+
+	rectfill(
+		trace_top_left_x,
+		trace_top_left_y,
+		trace_bot_right_x,
+		trace_bot_right_y,
+		color
+	)
+
+	rect(
+		trace_top_left_x,
+		trace_top_left_y,
+		trace_bot_right_x,
+		trace_bot_right_y,
+		5
+	)
+
+	print(
+		"trace",
+		trace_top_left_x + 6,
+		trace_top_left_y + 2,
+		0
+	)	
 end

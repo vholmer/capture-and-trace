@@ -12,8 +12,29 @@ function user_input()
 		et_mouse_over = false
 	end
 
+	if 		mouse_x >= capture_top_left_x
+		and mouse_x <= capture_bot_right_x
+		and mouse_y >= capture_top_left_y
+		and mouse_y <= capture_bot_right_y
+	then
+		capture_mouse_over = true
+	else
+		capture_mouse_over = false
+	end
+
+	if 		mouse_x >= trace_top_left_x
+		and mouse_x <= trace_bot_right_x
+		and mouse_y >= trace_top_left_y
+		and mouse_y <= trace_bot_right_y
+	then
+		trace_mouse_over = true
+	else
+		trace_mouse_over = false
+	end
+
 	if 		go_no_top_left_x ~= nil
 		and go_yes_top_left_x ~= nil
+		and game_over
 	then
 		if 		mouse_x >= go_no_top_left_x
 			and mouse_x <= go_no_bot_right_x

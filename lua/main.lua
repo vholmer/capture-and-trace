@@ -44,6 +44,7 @@ function _draw()
 	draw_endturn()
 	draw_cycle()
 	draw_ap()
+	draw_actions()
 	if game_over then
 		draw_game_over()
 	end

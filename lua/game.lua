@@ -30,23 +30,23 @@ function user_input()
 	end
 end
 
-function check_empty(x, y, a)
+
+function check_empty(x,y,a)
+	if x <= min_x or x >= max_x then return false end
+	if y <= min_y or y >= max_y then return false end
+	return matrix[x][y] == "empty"
+end
+
+function valid_home_pos(x, y, a)
 	local top_left_x = 0
 	local top_left_y = 0
 	local bot_right_x = 0
 	local bot_right_y = 0
 
-	if a == nil then
-		top_left_x = x - dist -  (home_radius + 3)
-		top_left_y = y - dist -  (home_radius + 3)
-		bot_right_x = x + dist + (home_radius + 3)
-		bot_right_y = y + dist + (home_radius + 3)
-	else
-		top_left_x = x - dist
-		top_left_y = y - dist
-		bot_right_x = x + dist
-		bot_right_y = y + dist
-	end
+	top_left_x = x - dist -  (home_radius + 3)
+	top_left_y = y - dist -  (home_radius + 3)
+	bot_right_x = x + dist + (home_radius + 3)
+	bot_right_y = y + dist + (home_radius + 3)
 
 	if top_left_x <= min_x then return false end
 	if top_left_y <= min_y then return false end

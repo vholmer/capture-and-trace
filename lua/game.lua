@@ -34,7 +34,7 @@ function user_input()
 
 	if 		go_no_top_left_x ~= nil
 		and go_yes_top_left_x ~= nil
-		and game_over
+		and game_over or victory
 	then
 		if 		mouse_x >= go_no_top_left_x
 			and mouse_x <= go_no_bot_right_x
@@ -56,8 +56,10 @@ function user_input()
 			go_yes_mouse_over = false
 		end
 	end
+
+	curr_mbtn = stat(34)
 	
-	if stat(34) == 1 then -- left click
+	if curr_mbtn == 1 and prev_mbtn == 0 then -- left click
 		if 		mouse_x >= end_turn_top_left_x
 			and mouse_x <= end_turn_bot_right_x
 			and mouse_y >= end_turn_top_left_y
@@ -118,7 +120,7 @@ function user_input()
 				and mouse_x <= go_yes_bot_right_x
 				and mouse_y >= go_yes_top_left_y
 				and mouse_y <= go_yes_bot_right_y
-				and game_over
+				and (game_over or victory)
 			then
 				run("try again")
 			end
@@ -127,7 +129,7 @@ function user_input()
 				and mouse_x <= go_no_bot_right_x
 				and mouse_y >= go_no_top_left_y
 				and mouse_y <= go_no_bot_right_y
-				and game_over
+				and (game_over or victory)
 			then
 				stop()
 			end
@@ -135,6 +137,8 @@ function user_input()
 	elseif stat(34) == 2 then -- right click
 		capturing = false
 	end
+
+	prev_mbtn = curr_mbtn
 end
 
 function is_game_over()
@@ -144,6 +148,15 @@ function is_game_over()
 		end
 	end
 	return true
+end
+
+function is_victory()
+	for agent in all(agents) do
+		if agent.snatcher_zero and agent.is_captured then
+			return true
+		end
+	end
+	return false
 end
 
 function check_empty(x, y, a)

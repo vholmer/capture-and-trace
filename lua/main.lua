@@ -24,11 +24,6 @@ function _update()
 	if in_cycle then
 		capturing = false
 		foreach(agents, act)
-		game_over = is_game_over()
-		if game_over then
-			buttons_disabled = true
-			in_cycle = false
-		end
 	else
 		if reset_ap == nil or reset_ap then
 			curr_ap = max_ap
@@ -41,6 +36,14 @@ function _update()
 	end
 	foreach(particles, particle_act)
 	foreach(exp_circles, circle_act)
+	game_over = is_game_over()
+	victory = is_victory()
+	if game_over or victory then
+		capturing = false
+		tracing = false
+		buttons_disabled = true
+		in_cycle = false
+	end
 end
 
 function _draw()
@@ -60,6 +63,8 @@ function _draw()
 	draw_actions()
 	if game_over then
 		draw_game_over()
+	elseif victory then
+		draw_victory()
 	end
 	draw_capture()
 	draw_mouse()

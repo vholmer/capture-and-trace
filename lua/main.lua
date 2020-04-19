@@ -4,6 +4,7 @@ function _init()
 	make_hall()
 	make_agents(n)
 	foreach(agents, make_home)
+    music(1)
 end
 
 function _update()

@@ -8,6 +8,7 @@ function make_world()
 end
 
 function make_agents(n)
+	first_snatcher = true
 	for i = 1, n do
 		local agent = {}
 		local attempt = 0
@@ -29,8 +30,15 @@ function make_agents(n)
 			agent.home_opn_indx = 1 + flr(rnd(3))
 			matrix[agent.x][agent.y] = "agent"
 			agent.hunger = flr(rnd(400)) + 100
+			agent.snatcher = first_snatcher
+			if first_snatcher then
+				matrix[agent.x][agent.y] = "snatcher"
+			else
+				matrix[agent.x][agent.y] = "agent"
+			end
 			add(agents, agent)
 		end
+		first_snatcher = false
 	end
 end
 

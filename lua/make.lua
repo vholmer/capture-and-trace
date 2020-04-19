@@ -36,6 +36,7 @@ function make_agents(n)
 			matrix[agent.x][agent.y] = "agent"
 		end
 		add(agents, agent)
+		make_home(agent)
 		first_snatcher = false
 	end
 end

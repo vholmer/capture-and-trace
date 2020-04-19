@@ -25,8 +25,6 @@ function user_input()
 	end
 end
 
-
-
 function check_empty(x, y, a)
 	local top_left_x = 0
 	local top_left_y = 0
@@ -88,6 +86,43 @@ end
 
 function act(a)
 	agent_move(a)
+	agent_snatch(a)
+end
+
+function get_nearby_agents(agent)
+	local result = {}
+	local coords = {}
+
+	top_left_x = agent.x - snatch_radius
+	top_left_y = agent.y - snatch_radius
+	bot_right_x = agent.x + snatch_radius
+	bot_right_y = agent.y + snatch_radius
+
+	for i = top_left_x, bot_right_x do
+		for j = top_left_y, bot_right_y do
+			if matrix[i][j] == "snatcher" then
+				coords[#coords] = {i, j}
+			end
+		end
+	end
+
+	if #coords > 0 then
+		i = 0
+		for agent in all(agents) do
+			if 		agent.x == coords[i][0]
+				and agent.y == coords[i][1]
+			then
+				result[i] = agent
+			end
+			i += 1
+		end
+	end
+
+	return result
+end
+
+function agent_snatch(agent)
+	--result = get_nearby_agents(agent)
 end
 
 function agent_move(agent)

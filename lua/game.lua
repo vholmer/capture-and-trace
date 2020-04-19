@@ -135,8 +135,8 @@ function get_nearby_snatcher(agent)
 end
 
 function agent_snatch(agent)
-	result = get_nearby_snatcher(agent)
-	if result ~= nil then
+	snatcher = get_nearby_snatcher(agent)
+	if snatcher ~= nil then
 		if snatch_chance > rnd(0.1) then
 			agent.snatcher = true
 		end

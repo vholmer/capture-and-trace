@@ -67,7 +67,9 @@ function user_input()
 			and not buttons_disabled
 		then
 			agent_to_capture = nil
+			agent_to_trace = nil
 			capturing = false
+			tracing = false
 			et_mouse_over = false
 			in_cycle = true
 			time_cycle = 100
@@ -78,12 +80,23 @@ function user_input()
 			and mouse_x <= capture_bot_right_x
 			and mouse_y >= capture_top_left_y
 			and mouse_y <= capture_bot_right_y
+			and not tracing
 		then
 			capturing = true
 		end
 
+		if		mouse_x >= trace_top_left_x
+			and mouse_x <= trace_bot_right_x
+			and mouse_y >= trace_top_left_y
+			and mouse_y <= trace_bot_right_y
+			and not capturing
+		then
+			tracing = true
+		end
+
 		if capturing and agent_to_capture ~= nil then
-			if curr_ap >= 5 then
+			capture_cost = 5
+			if curr_ap >= capture_cost then
 				rand_x = flr(rnd(hall.bot_right_x - hall.top_left_x - 1)) + hall.top_left_x + 1
 				rand_y = flr(rnd(hall.bot_right_y - hall.top_left_y - 1)) + hall.top_left_y + 1
 
@@ -94,7 +107,8 @@ function user_input()
 					rand_y,
 					3,
 					9,
-					10
+					10,
+					1
 				)
 
 				make_exp_circle(
@@ -108,8 +122,61 @@ function user_input()
 				agent_to_capture.x = rand_x
 				agent_to_capture.y = rand_y
 				agent_to_capture.is_captured = true
-				curr_ap -= 5
+				curr_ap -= capture_cost
 				agent_to_capture = nil
+			end
+		end
+
+		if tracing and agent_to_trace ~= nil then
+			trace_cost = 20
+			if curr_ap >= trace_cost then
+				agent_to_trace.trace_depth += 1
+
+				local prev_snatcher, next_snatcher
+
+				if agent_to_trace.snatched_by ~= nil then
+					prev_snatcher = nil
+					next_snatcher = agent_to_trace
+
+					for i = 0, agent_to_trace.trace_depth do
+						prev_snatcher = next_snatcher
+						if next_snatcher.snatched_by == nil then
+							next_snatcher = nil
+							break
+						end
+						next_snatcher = next_snatcher.snatched_by
+					end
+				end
+
+				if next_snatcher == nil then
+					curr_ap -= 15
+					tracing = false
+					agent_to_trace = nil
+					return
+				end
+
+				make_particle_line(
+					prev_snatcher.x,
+					prev_snatcher.y,
+					next_snatcher.x,
+					next_snatcher.y,
+					3,
+					3,
+					11,
+					trace_particle_chance
+				)
+				add(trace_pairs, {prev_snatcher, next_snatcher})
+
+				make_exp_circle(
+					next_snatcher.x,
+					next_snatcher.y,
+					0.6,
+					8,
+					3
+				)
+
+				curr_ap -= trace_cost
+				agent_to_trace = nil
 			end
 		end
 
@@ -136,6 +203,7 @@ function user_input()
 		end
 	elseif stat(34) == 2 then -- right click
 		capturing = false
+		tracing = false
 	end
 
 	prev_mbtn = curr_mbtn
@@ -300,6 +368,8 @@ function agent_get_snatched(agent)
 	if snatcher ~= nil and not agent.is_captured then
 		if snatch_chance > rnd(1) then
 			agent.is_snatcher = true
+			agent.snatched_by = snatcher
+
 		end
 	end
 end
@@ -330,7 +400,7 @@ function agent_move(agent)
 		return
 	end
 
-	if not agent.snatcher then
+	if not agent.snatcher and agent.trace_depth == 0 then
 		agent.hunger -= 1
 	end
 		

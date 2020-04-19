@@ -23,6 +23,7 @@ function make_agents(n)
 		agent.y = rand_y
 		agent.home_x = rand_x
 		agent.home_y = rand_y
+		agent.trace_depth = -1
 		agent.is_captured = false
 		agent.home_opn_indx = 1 + flr(rnd(3))
 		matrix[agent.x][agent.y] = "agent"
@@ -125,7 +126,7 @@ function make_particle_point(x, y, n, col)
 	end
 end
 
-function make_particle_line(x1, y1, x2, y2, n, col1, col2)
+function make_particle_line(x1, y1, x2, y2, n, col1, col2, chance)
 	local x, y, dx, dy, dx1, dy1, px, py, xe, ye
 
 	dx = x2 - x1
@@ -148,10 +149,12 @@ function make_particle_line(x1, y1, x2, y2, n, col1, col2)
 			xe = x1
 		end
 
-		if 0.5 > rnd(1) then
-			make_particle_point(x, y, n, col1)
-		else
-			make_particle_point(x, y, n, col2)
+		if chance > rnd(1) then
+			if 0.5 > rnd(1) then
+				make_particle_point(x, y, n, col1)
+			else
+				make_particle_point(x, y, n, col2)
+			end
 		end
 
 		while x < xe do
@@ -169,10 +172,12 @@ function make_particle_line(x1, y1, x2, y2, n, col1, col2)
 				px += 2 * (dy1 - dx1)
 			end
 
-			if 0.5 > rnd(1) then
-				make_particle_point(x, y, n, col1)
-			else
-				make_particle_point(x, y, n, col2)
+			if chance > rnd(1) then
+				if 0.5 > rnd(1) then
+					make_particle_point(x, y, n, col1)
+				else
+					make_particle_point(x, y, n, col2)
+				end
 			end
 		end
 	else
@@ -186,10 +191,12 @@ function make_particle_line(x1, y1, x2, y2, n, col1, col2)
 			ye = y1
 		end
 
-		if 0.5 > rnd(1) then
-			make_particle_point(x, y, n, col1)
-		else
-			make_particle_point(x, y, n, col2)
+		if chance > rnd(1) then
+			if 0.5 > rnd(1) then
+				make_particle_point(x, y, n, col1)
+			else
+				make_particle_point(x, y, n, col2)
+			end
 		end
 
 		while y < ye do
@@ -208,10 +215,12 @@ function make_particle_line(x1, y1, x2, y2, n, col1, col2)
 				py += 2 * (dx1 - dy1)
 			end
 
-			if 0.5 > rnd(1) then
-				make_particle_point(x, y, n, col1)
-			else
-				make_particle_point(x, y, n, col2)
+			if chance > rnd(1) then
+				if 0.5 > rnd(1) then
+					make_particle_point(x, y, n, col1)
+				else
+					make_particle_point(x, y, n, col2)
+				end
 			end
 		end
 	end

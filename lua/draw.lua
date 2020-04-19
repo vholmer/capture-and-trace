@@ -32,8 +32,8 @@ function draw_capture()
 	local mouse_x = stat(32)
 	local mouse_y = stat(33)
 
-	for agent in all(agents) do
-		if capturing then
+	if capturing then
+		for agent in all(agents) do
 			local top_left_x = agent.x - 1
 			local top_left_y = agent.y - 1
 			local bot_right_x = agent.x + 1
@@ -63,6 +63,64 @@ function draw_capture()
 					agent.y,
 					4,
 					10
+				)
+				break
+			end
+		end
+	end
+end
+
+function draw_trace_lines()
+	for pair in all(trace_pairs) do
+		make_particle_line(
+			pair[1].x,
+			pair[1].y,
+			pair[2].x,
+			pair[2].y,
+			1,
+			3,
+			11,
+			trace_particle_chance
+		)
+	end
+end
+
+function draw_trace()
+	local mouse_x = stat(32)
+	local mouse_y = stat(33)
+
+	if tracing then
+		for agent in all(agents) do
+			local top_left_x = agent.x - 1
+			local top_left_y = agent.y - 1
+			local bot_right_x = agent.x + 1
+			local bot_right_y = agent.y + 1
+
+			if top_left_x < min_x or top_left_x == nil then
+				top_left_x = min_x
+			end
+			if top_left_y < min_y or top_left_y == nil
+				then top_left_y = min_y
+				end
+			if bot_right_x > max_x or bot_right_x == nil then
+				bot_right_x = max_x
+			end
+			if bot_right_y > max_y  or bot_right_y == nil then
+				bot_right_y = max_y
+			end
+
+			if 		mouse_x >= top_left_x
+				and mouse_x <= bot_right_x
+				and mouse_y >= top_left_y
+				and mouse_y <= bot_right_y
+				and agent.is_captured
+			then
+				agent_to_trace = agent
+				circ(
+					agent.x,
+					agent.y,
+					4,
+					3
 				)
 				break
 			end
@@ -208,13 +266,14 @@ function draw_mouse()
 end
 
 function draw_agent(a)
-	-- and false because debugging feature toggle
+	local debugging = true
+
 	if 		a.is_snatcher
-		and true
+		and debugging
 	then
 		pset(a.x, a.y, 9)
 	elseif	a.is_captured
-		and true
+		and debugging
 	then
 		pset(a.x, a.y, 11)
 	else
@@ -448,7 +507,7 @@ function draw_actions()
 		color = 8
 	elseif capturing then
 		color = 12
-	elseif capture_mouse_over and not buttons_disabled then
+	elseif capture_mouse_over and not tracing and not buttons_disabled then
 		color = 3
 	elseif in_cycle then
 		color = 8
@@ -486,7 +545,9 @@ function draw_actions()
 
 	if game_over or victory then
 		color = 8
-	elseif trace_mouse_over and not buttons_disabled then
+	elseif tracing then
+		color = 12
+	elseif trace_mouse_over and not capturing and not buttons_disabled then
 		color = 3
 	elseif in_cycle then
 		color = 8

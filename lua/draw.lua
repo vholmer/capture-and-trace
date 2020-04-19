@@ -1,5 +1,5 @@
 function draw_ap()
-	ap_top_left_x = 46
+	ap_top_left_x = 48
 	ap_top_left_y = 111
 	ap_bot_right_x = ap_top_left_x + 28
 	ap_bot_right_y = ap_top_left_y + 6
@@ -47,7 +47,7 @@ function draw_cycle()
 	)
 
 	print(
-		"Cycle: " .. time_cycle \ 10,
+		"Cycle:" .. cycle_count,
 		cycle_top_right_x - 31,
 		cycle_top_right_y + 1,
 		0
@@ -163,9 +163,12 @@ function draw_mouse()
 end
 
 function draw_agent(a)
-	col = 8
-	-- if a.going_home ~= nil and a.going_home == true then
-	-- 	col = 11
-	-- end
-	pset(a.x, a.y, col)
+	-- and false because debugging feature toggle
+	if 		a.snatcher
+		and false
+	then
+		pset(a.x, a.y, 9)
+	else
+		pset(a.x, a.y, 8)
+	end
 end

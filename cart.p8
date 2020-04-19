@@ -1,5 +1,5 @@
 pico-8 cartridge // http://www.pico-8.com
-version 20
+version 21
 __lua__
 #include lua/globals.lua
 #include lua/main.lua

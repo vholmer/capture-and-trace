@@ -1,0 +1,19 @@
+poke(0x5F2D, 1) -- mouse support
+size = 128
+matrix = {}
+agents = {}
+hall = {}
+dist = 1 -- distance between agents
+min_x = 0 + dist
+min_y = 0 + dist
+max_x = size - dist
+max_y = 100
+change_dir_chance = 0.1 -- percent
+hit_distance = 3
+home_size = 4
+home_radius = home_size \ 2
+time_cycle = 100
+in_cycle = true
+max_ap = 4
+curr_ap = 4
+et_mouse_over = false

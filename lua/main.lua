@@ -12,7 +12,11 @@ function _update()
 	end
 	if in_cycle then
 		foreach(agents, act)
-		is_game_over()
+		game_over = is_game_over()
+		if game_over then
+			buttons_disabled = true
+			in_cycle = false
+		end
 	else
 		user_input()
 	end
@@ -33,6 +37,9 @@ function _draw()
 	draw_endturn()
 	draw_cycle()
 	draw_ap()
+	if game_over then
+		draw_game_over()
+	end
 	draw_mouse()
 	--print("CPU: " .. stat(1), 0, 0, 7)
 	--print("MEM: " .. stat(0), 0, 6, 7)

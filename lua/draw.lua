@@ -4,7 +4,9 @@ function draw_ap()
 	ap_bot_right_x = ap_top_left_x + 33
 	ap_bot_right_y = ap_top_left_y + 6
 
-	if in_cycle then
+	if game_over then
+		color = 8
+	elseif in_cycle then
 		color = 8
 	else
 		color = 6
@@ -32,7 +34,9 @@ function draw_cycle()
 	cycle_bot_left_x = cycle_top_right_x - 32
 	cycle_bot_left_y = cycle_top_right_y + 6
 
-	if in_cycle then
+	if game_over then
+		color = 8
+	elseif in_cycle then
 		color = 8
 	else
 		color = 6
@@ -60,7 +64,9 @@ function draw_endturn()
 	end_turn_top_left_x = end_turn_bot_right_x - 32
 	end_turn_top_left_y = end_turn_bot_right_y - 6
 
-	if et_mouse_over then
+	if game_over then
+		color = 8
+	elseif et_mouse_over and not buttons_disabled then
 		color = 3
 	elseif in_cycle then
 		color = 8
@@ -137,4 +143,112 @@ function draw_agent(a)
 	else
 		pset(a.x, a.y, 8)
 	end
+end
+
+function draw_game_over()
+	local color = 0
+	local top_left_x = 32
+	local top_left_y = 25
+	local bot_right_x = 128 - 32
+	local bot_right_y = 128 - 28 - 25
+
+	rectfill(
+		top_left_x,
+		top_left_y,
+		bot_right_x,
+		bot_right_y,
+		0
+	)
+
+	rect(
+		top_left_x,
+		top_left_y,
+		bot_right_x,
+		bot_right_y,
+		6
+	)
+
+	print(
+		"Game over",
+		2 + top_left_x + 12,
+		4 + top_left_y,
+		7
+	)
+
+	print(
+		"Try again?",
+		2 + top_left_x + 10,
+		2 + top_left_y + 12,
+		7
+	)
+
+	go_yes_top_left_x = 2 + top_left_x + 10
+	go_yes_top_left_y = 2 + top_left_y + 24
+	go_yes_bot_right_x = 2 + top_left_x + 10 + 14
+	go_yes_bot_right_y = 2 + top_left_y + 24 + 8
+
+	if go_yes_mouse_over then
+		color = 3
+	else
+		color = 6
+	end
+
+	rectfill(
+		go_yes_top_left_x,
+		go_yes_top_left_y,
+		go_yes_bot_right_x,
+		go_yes_bot_right_y,
+		color
+	)
+
+	rect(
+		go_yes_top_left_x,
+		go_yes_top_left_y,
+		go_yes_bot_right_x,
+		go_yes_bot_right_y,
+		5
+	)
+
+	print(
+		"Yes",
+		go_yes_top_left_x + 2,
+		go_yes_top_left_y + 2,
+		0
+	)
+
+	local width = 10
+	local offset = 28
+	go_no_top_left_x = go_yes_top_left_x + offset
+	go_no_top_left_y = go_yes_top_left_y
+	go_no_bot_right_x = go_yes_top_left_x + offset + width
+	go_no_bot_right_y = go_yes_bot_right_y
+
+	if go_no_mouse_over then
+		color = 3
+	else
+		color = 6
+	end
+
+	rectfill(
+		go_no_top_left_x,
+		go_no_top_left_y,
+		go_no_bot_right_x,
+		go_no_bot_right_y,
+		color
+	)
+
+	rect(
+		go_no_top_left_x,
+		go_no_top_left_y,
+		go_no_bot_right_x,
+		go_no_bot_right_y,
+		5
+	)
+
+	print(
+		"No",
+		go_no_top_left_x + 2,
+		go_no_top_left_y + 2,
+		0
+	)
 end

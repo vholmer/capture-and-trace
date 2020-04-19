@@ -11,12 +11,37 @@ function user_input()
 	else
 		et_mouse_over = false
 	end
+
+	if 		go_no_top_left_x ~= nil
+		and go_yes_top_left_x ~= nil
+	then
+		if 		mouse_x >= go_no_top_left_x
+			and mouse_x <= go_no_bot_right_x
+			and mouse_y >= go_no_top_left_y
+			and mouse_y <= go_no_bot_right_y
+		then
+			go_no_mouse_over = true
+		else
+			go_no_mouse_over = false
+		end
+
+		if 		mouse_x >= go_yes_top_left_x
+			and mouse_x <= go_yes_bot_right_x
+			and mouse_y >= go_yes_top_left_y
+			and mouse_y <= go_yes_bot_right_y
+		then
+			go_yes_mouse_over = true
+		else
+			go_yes_mouse_over = false
+		end
+	end
 	
 	if stat(34) == 1 then
 		if 		mouse_x >= end_turn_top_left_x
 			and mouse_x <= end_turn_bot_right_x
 			and mouse_y >= end_turn_top_left_y
 			and mouse_y <= end_turn_bot_right_y
+			and not buttons_disabled
 		then
 			et_mouse_over = false
 			in_cycle = true
@@ -26,6 +51,28 @@ function user_input()
 				cycle_count = 99
 			end
 			time_cycle = 100
+		end
+
+		if 		go_no_top_left_x ~= nil
+			and go_yes_top_left_x ~= nil
+		then
+			if 		mouse_x >= go_yes_top_left_x
+				and mouse_x <= go_yes_bot_right_x
+				and mouse_y >= go_yes_top_left_y
+				and mouse_y <= go_yes_bot_right_y
+				and game_over
+			then
+				run("try again")
+			end
+
+			if 		mouse_x >= go_no_top_left_x
+				and mouse_x <= go_no_bot_right_x
+				and mouse_y >= go_no_top_left_y
+				and mouse_y <= go_no_bot_right_y
+				and game_over
+			then
+				stop()
+			end
 		end
 	end
 end

@@ -353,7 +353,9 @@ function draw_agent(a)
 		and debugging
 	then
 		pset(a.x, a.y, 11)
-	elseif a.going_home then
+	elseif a.going_home
+		and debugging
+	then
 		pset(a.x, a.y, 4)
 	else
 		pset(a.x, a.y, 8)

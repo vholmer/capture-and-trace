@@ -419,7 +419,7 @@ function agent_move(agent)
 		agent.is_captured = false
 	end
 
-	if agent.hunger < 0 or agent.going_home then
+	if not agent.is_captured and (agent.hunger < 0 or agent.going_home) then
 		agent.going_home = true
 		agent.is_captured = false
 
@@ -480,7 +480,7 @@ function agent_move(agent)
 		return
 	end
 
-	if not agent.snatcher and agent.trace_depth == 0 then
+	if not agent.snatcher and agent.trace_depth == 0 and not agent.is_captured then
 		agent.hunger -= 1
 	end
 		

@@ -586,7 +586,7 @@ function draw_actions()
 		color = 8
 	elseif capturing then
 		color = 12
-	elseif capture_mouse_over and not tracing and not buttons_disabled then
+	elseif capture_mouse_over and not buttons_disabled then
 		color = 3
 	elseif in_cycle then
 		color = 8
@@ -626,7 +626,7 @@ function draw_actions()
 		color = 8
 	elseif tracing then
 		color = 12
-	elseif trace_mouse_over and not capturing and not buttons_disabled then
+	elseif trace_mouse_over and not buttons_disabled then
 		color = 3
 	elseif in_cycle then
 		color = 8

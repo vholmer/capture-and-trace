@@ -88,18 +88,20 @@ function user_input()
 				and mouse_x <= capture_bot_right_x
 				and mouse_y >= capture_top_left_y
 				and mouse_y <= capture_bot_right_y
-				and not tracing
 			then
 				capturing = true
+				tracing = false
+				agent_to_trace = nil
 			end
 
 			if		mouse_x >= trace_top_left_x
 				and mouse_x <= trace_bot_right_x
 				and mouse_y >= trace_top_left_y
 				and mouse_y <= trace_bot_right_y
-				and not capturing
 			then
+				capturing = false
 				tracing = true
+				agent_to_capture = nil
 			end
 
 			if capturing and agent_to_capture ~= nil then
@@ -136,7 +138,7 @@ function user_input()
 			end
 
 			if tracing and agent_to_trace ~= nil then
-				trace_cost = 5
+				trace_cost = 10
 				if curr_ap >= trace_cost then
 					agent_to_trace.trace_depth += 1
 

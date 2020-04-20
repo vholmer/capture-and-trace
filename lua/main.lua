@@ -1,9 +1,19 @@
 function _init()
 	local n = 50
+	if stat(6) == "retry" then
+		in_menu = false
+	else
+		in_cycle = false
+		buttons_disabled = true
+	end
 	make_world()
 	make_hall()
 	make_agents(n)
-    music(1)
+	if in_menu then
+    	music(21)
+    else
+    	music(1)
+    end
 end
 
 function _update()
@@ -38,7 +48,7 @@ function _update()
 	foreach(exp_circles, circle_act)
 	game_over = is_game_over()
 	victory = is_victory()
-	if game_over or victory then
+	if game_over or victory or in_menu then
 		capturing = false
 		tracing = false
 		buttons_disabled = true
@@ -47,29 +57,35 @@ function _update()
 end
 
 function _draw()
-	cls(1)
-	rectfill(0, 101, 127, 127, 0)
-	if not in_cycle then
-		rect(0, 101, 127, 127, 6)
+	if in_menu then
+		cls(0)
+		draw_menu()
+		draw_mouse()
+	else
+		cls(1)
+		rectfill(0, 101, 127, 127, 0)
+		if not in_cycle then
+			rect(0, 101, 127, 127, 6)
+		end
+		foreach(agents, draw_home)
+		draw_trace_lines()
+		foreach(agents, draw_agent)
+		draw_hall()
+		draw_exp_circles()
+		draw_particles()
+		draw_endturn()
+		draw_cycle()
+		draw_ap()
+		draw_actions()
+		if game_over then
+			draw_game_over()
+		elseif victory then
+			draw_victory()
+		end
+		draw_capture()
+		draw_trace()
+		draw_mouse()
+		--print("CPU: " .. stat(1), 0, 0, 7)
+		--print("MEM: " .. stat(0), 0, 6, 7)
 	end
-	foreach(agents, draw_home)
-	draw_trace_lines()
-	foreach(agents, draw_agent)
-	draw_hall()
-	draw_exp_circles()
-	draw_particles()
-	draw_endturn()
-	draw_cycle()
-	draw_ap()
-	draw_actions()
-	if game_over then
-		draw_game_over()
-	elseif victory then
-		draw_victory()
-	end
-	draw_capture()
-	draw_trace()
-	draw_mouse()
-	--print("CPU: " .. stat(1), 0, 0, 7)
-	--print("MEM: " .. stat(0), 0, 6, 7)
 end

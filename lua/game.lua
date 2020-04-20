@@ -30,23 +30,23 @@ function user_input()
 	end
 end
 
-function check_empty(x, y, a)
+
+function check_empty(x,y,a)
+	if x <= min_x or x >= max_x then return false end
+	if y <= min_y or y >= max_y then return false end
+	return matrix[x][y] == "empty"
+end
+
+function valid_home_pos(x, y, a)
 	local top_left_x = 0
 	local top_left_y = 0
 	local bot_right_x = 0
 	local bot_right_y = 0
 
-	if a == nil then
-		top_left_x = x - dist -  (home_radius + 3)
-		top_left_y = y - dist -  (home_radius + 3)
-		bot_right_x = x + dist + (home_radius + 3)
-		bot_right_y = y + dist + (home_radius + 3)
-	else
-		top_left_x = x - dist
-		top_left_y = y - dist
-		bot_right_x = x + dist
-		bot_right_y = y + dist
-	end
+	top_left_x = x - dist -  (home_radius + 3)
+	top_left_y = y - dist -  (home_radius + 3)
+	bot_right_x = x + dist + (home_radius + 3)
+	bot_right_y = y + dist + (home_radius + 3)
 
 	if top_left_x <= min_x then return false end
 	if top_left_y <= min_y then return false end
@@ -147,6 +147,9 @@ function agent_snatch(agent)
 	if result ~= nil then
 		if snatch_chance > rnd(0.1) then
 			agent.snatcher = true
+			-- prevent snatched agent from going home
+			agent.hunger = 100
+			agent.going_home = false
 		end
 	end
 end
@@ -157,15 +160,57 @@ function agent_move(agent)
 
 		if agent.x == agent.home_x and agent.y == agent.home_y then
 			agent.going_home = false
+			agent.emerg_dir_x = nil
+			agent.emerg_dir_y = nil
 			agent.hunger = flr(rnd(400)) + 100
 		else
+			matrix[agent.x][agent.y] = "empty"
+
 			xdir = move_dir(agent.home_x, agent.x)
 			ydir = move_dir(agent.home_y, agent.y)
-			if xdir ~= 0 then
-				agent.x += sign(xdir)
-			else
-				agent.y += sign(ydir)
+			xdir = sign(xdir)
+			ydir = sign(ydir)
+
+			-- Can we move horizontal
+			can_mov_hor = matrix[agent.x+xdir][agent.y] ~= "hall"
+			-- Can we move vertical
+			can_mov_ver = matrix[agent.x][agent.y+ydir] ~= "hall"
+
+			moved = false
+			outputfile = "output.txt"
+
+			if not moved and xdir ~= 0 and can_mov_hor and agent.emerg_dir_x == nil then
+				agent.x += xdir
+				agent.emerg_dir_y = nil
+				moved = true
 			end
+
+			if not moved and ydir ~= 0 and can_mov_ver and agent.emerg_dir_y == nil then
+				agent.y += ydir
+				agent.emerg_dir_x = nil
+				moved = true
+			end
+
+			if not moved and agent.emerg_dir_y ~= nil then
+				agent.y += agent.emerg_dir_y
+				moved = true
+			end
+
+			if not moved and agent.emerg_dir_x ~= nil then
+				agent.x += agent.emerg_dir_x
+				moved = true
+			end
+
+			if not moved then
+				if xdir ~= 0 and not can_mov_hor then
+					agent.emerg_dir_y = 1
+				else
+					agent.emerg_dir_x = 1
+				end
+			end
+
+			matrix[agent.x][agent.y] = "agent"
+
 		end
 		return
 	end

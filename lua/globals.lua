@@ -26,6 +26,6 @@ curr_ap = 0
 ap_limit = 30
 et_mouse_over = false
 snatch_radius = 3
-snatch_chance = 1 -- percent
+snatch_chance = 0.1 -- percent
 game_over = false
 buttons_disabled = false

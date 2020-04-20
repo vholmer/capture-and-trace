@@ -57,7 +57,7 @@ function _update()
 			sfx(23)
 			music(-1)
 		end
-        capturing = false
+		capturing = false
 		tracing = false
 		buttons_disabled = true
 		in_cycle = false

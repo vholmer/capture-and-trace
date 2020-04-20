@@ -41,7 +41,7 @@ function _update()
 		end
 		user_input()
 	end
-	if time_cycle > 0 then
+	if time_cycle > 0 and in_cycle then
 		time_cycle -= 1
 	end
 	foreach(particles, particle_act)

@@ -17,7 +17,8 @@ function make_agents(n)
 		while not empty_coord do
 			rand_x = flr(rnd(max_x - min_x)) + min_x
 			rand_y = flr(rnd(max_y - min_y)) + min_y
-			empty_coord = check_empty(rand_x, rand_y, nil)
+			empty_coord = valid_home_pos(rand_x, rand_y, agent)
+			attempt += 1
 		end
 		agent.x = rand_x
 		agent.y = rand_y

@@ -46,11 +46,15 @@ function _update()
 	end
 	foreach(particles, particle_act)
 	foreach(exp_circles, circle_act)
-	game_over, old_state = is_game_over(), game_over
-	victory = is_victory()
+	game_over, old_game_over_state = is_game_over(), game_over
+	victory, old_victory_state = is_victory(), victory
 	if game_over or victory or in_menu then
-		if not old_state and game_over then
+		if not old_game_over_state and game_over then
 			sfx(22)
+			music(-1)
+		end
+		if not old_victory_state and victory then
+			sfx(23)
 			music(-1)
 		end
         capturing = false

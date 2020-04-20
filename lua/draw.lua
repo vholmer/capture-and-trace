@@ -28,29 +28,41 @@ function draw_ap()
 	)
 end
 
+function clip_box(x, y)
+	local top_left_x = x - 1
+	local top_left_y = y - 1
+	local bot_right_x = x + 1
+	local bot_right_y = y + 1
+
+	if top_left_x < min_x then
+		top_left_x = min_x
+	end
+	if top_left_y < min_y
+	then
+		top_left_y = min_y
+	end
+	if bot_right_x > max_x then
+		bot_right_x = max_x
+	end
+	if bot_right_y > max_y then
+		bot_right_y = max_y
+	end
+
+	return {top_left_x, top_left_y, bot_right_x, bot_right_y}
+end
+
 function draw_capture()
 	local mouse_x = stat(32)
 	local mouse_y = stat(33)
 
 	if capturing then
 		for agent in all(agents) do
-			local top_left_x = agent.x - 1
-			local top_left_y = agent.y - 1
-			local bot_right_x = agent.x + 1
-			local bot_right_y = agent.y + 1
+			local box = clip_box(agent.x, agent.y)
 
-			if top_left_x < min_x or top_left_x == nil then
-				top_left_x = min_x
-			end
-			if top_left_y < min_y or top_left_y == nil
-				then top_left_y = min_y
-				end
-			if bot_right_x > max_x or bot_right_x == nil then
-				bot_right_x = max_x
-			end
-			if bot_right_y > max_y  or bot_right_y == nil then
-				bot_right_y = max_y
-			end
+			local top_left_x = box[1]
+			local top_left_y = box[2]
+			local bot_right_x = box[3]
+			local bot_right_y = box[4]
 
 			if 		mouse_x >= top_left_x
 				and mouse_x <= bot_right_x
@@ -91,23 +103,12 @@ function draw_trace()
 
 	if tracing then
 		for agent in all(agents) do
-			local top_left_x = agent.x - 1
-			local top_left_y = agent.y - 1
-			local bot_right_x = agent.x + 1
-			local bot_right_y = agent.y + 1
+			local box = clip_box(agent.x, agent.y)
 
-			if top_left_x < min_x or top_left_x == nil then
-				top_left_x = min_x
-			end
-			if top_left_y < min_y or top_left_y == nil
-				then top_left_y = min_y
-				end
-			if bot_right_x > max_x or bot_right_x == nil then
-				bot_right_x = max_x
-			end
-			if bot_right_y > max_y  or bot_right_y == nil then
-				bot_right_y = max_y
-			end
+			local top_left_x = box[1]
+			local top_left_y = box[2]
+			local bot_right_x = box[3]
+			local bot_right_y = box[4]
 
 			if 		mouse_x >= top_left_x
 				and mouse_x <= bot_right_x

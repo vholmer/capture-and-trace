@@ -199,6 +199,82 @@ function draw_endturn()
 	)
 end
 
+function draw_menu()
+	sspr(
+		8,
+		0,
+		32,
+		16,
+		16,
+		8,
+		100,
+		48
+	)
+
+	print(
+		"by lukas018 & liquidfunk",
+		20,
+		2,
+		7
+	)
+
+	print(
+		"capture & trace",
+		36,
+		58,
+		8
+	)
+
+	print(
+		"find the original spreader",
+		15,
+		70,
+		8
+	)
+
+	print(
+		"before all are infected",
+		15,
+		77,
+		8
+	)
+
+	print(
+		"capture citizens in hall",
+		15,
+		88,
+		8
+	)
+
+	print(
+		"trace the infection route",
+		15,
+		95,
+		8
+	)
+
+	print(
+		"by clicking trace",
+		15,
+		102,
+		8
+	)
+
+	print(
+		"and then a captured one",
+		15,
+		109,
+		8
+	)
+
+	print(
+		"click anywhere to begin",
+		20,
+		120,
+		8
+	)
+end
+
 function draw_hall()
 	rect(
 		hall.top_left_x,

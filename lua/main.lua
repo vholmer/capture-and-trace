@@ -36,9 +36,13 @@ function _update()
 	end
 	foreach(particles, particle_act)
 	foreach(exp_circles, circle_act)
-	game_over = is_game_over()
+	game_over, old_state = is_game_over(), game_over
 	victory = is_victory()
 	if game_over or victory then
+		if not old_state and game_over then
+			sfx(22)
+			music(-1)
+		end
 		capturing = false
 		tracing = false
 		buttons_disabled = true

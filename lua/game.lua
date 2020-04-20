@@ -110,6 +110,7 @@ function user_input()
 					10,
 					1
 				)
+				sfx(21)
 
 				make_exp_circle(
 					rand_x,
@@ -135,6 +136,8 @@ function user_input()
 				local prev_snatcher, next_snatcher
 
 				if agent_to_trace.snatched_by ~= nil then
+					-- Should probably be put somewhere more appropriate
+					sfx(19)
 					prev_snatcher = nil
 					next_snatcher = agent_to_trace
 
@@ -149,6 +152,7 @@ function user_input()
 				end
 
 				if next_snatcher == nil then
+					sfx(18)
 					curr_ap -= trace_cost
 					if not agent_to_trace.is_snatcher then
 						make_particle_line(

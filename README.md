@@ -11,11 +11,11 @@ The game takes place in cycles where the simulation runs. After each cycle, it i
 
 ### Capturing
 
-Click capture and then click on a citizen. They will immediately be transported to *The Hall* where they can be examined. After a while the citizen will head back home.
+Click capture and then click on a citizen. They will immediately be transported to *The Hall* where they can be examined.
 
 ### Tracing
 
-Click trace and then click on a captured citizen inside *The Hall*. If the citizen is infected a *trace line* will appear to the citizen that infected the clicked-on citizen. Trace that same captured citizen again and the trace will go one level deeper, tracing who infected the citizen that infected the captured citizen. If no further trace lines appears, great! You found patient zero. Capture them to win!
+Click trace and then click on a captured citizen inside *The Hall*. If the citizen is infected a *trace line* will appear to the citizen that infected the clicked-on citizen. Trace that same captured citizen again and the trace will go one level deeper, tracing who infected the citizen that infected the captured citizen and so on. If no further trace lines appears, great! You found patient zero. Capture them to win!
 
 ### Winning
 

@@ -19,6 +19,7 @@ home_size = 4
 home_radius = home_size \ 2
 cycle_count = 1
 time_cycle = 100
+in_menu = true
 in_cycle = true
 max_ap = 0
 curr_ap = 0
